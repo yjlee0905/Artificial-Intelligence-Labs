@@ -29,13 +29,14 @@ private:
     char vertices[MAX_VERTICES];
     Node* adjList[MAX_VERTICES];
 
-    int convertToInt(char name);
-    char convertToChar(int idx);
-
 public:
     Graph();
+    int convertToInt(char name);
+    char convertToChar(int idx);
     void insertVertex(char name);
+    char getVertex(int idx);
     void insertEdge(char u, char v);
+    Node* getAdjListNode(int idx);
     void display();
 };
 

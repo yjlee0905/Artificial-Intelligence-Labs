@@ -54,12 +54,21 @@ void Graph::insertVertex(char name) {
     size++;
 }
 
+char Graph::getVertex(int idx) {
+    return vertices[idx];
+}
+
+
 void Graph::insertEdge(char u, char v) {
     int uNum = convertToInt(u);
     int vNum = convertToInt(v);
 
     adjList[uNum] = new Node(v, adjList[uNum]);
     adjList[vNum] = new Node(u, adjList[vNum]);
+}
+
+Node* Graph::getAdjListNode(int idx) {
+    return adjList[idx];
 }
 
 void Graph::display() {

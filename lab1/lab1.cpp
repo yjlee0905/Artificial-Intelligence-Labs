@@ -1,23 +1,33 @@
 #include <iostream>
 #include "Graph.h"
+#include "SearchAlgorithms.h"
 
 using namespace std;
 
 int main() {
-    Graph g;
+    SearchAlgorithms g;
 
     g.insertVertex('S');
-    g.insertVertex('Z');
     g.insertVertex('A');
     g.insertVertex('C');
+    g.insertVertex('B');
+    g.insertVertex('E');
+    g.insertVertex('D');
     g.insertVertex('G');
 
+
+    g.insertEdge('S', 'A');
     g.insertEdge('S', 'C');
-    g.insertEdge('S', 'G');
-    g.insertEdge('S', 'Z');
-    g.insertEdge('C', 'A');
-    g.insertEdge('Z', 'A');
+    g.insertEdge('A', 'C');
+    g.insertEdge('A', 'B');
+    g.insertEdge('A', 'E');
+    g.insertEdge('C', 'D');
+    g.insertEdge('D', 'G');
 
     g.display();
+
+    cout << "BFS" << endl;
+    g.BFS('S');
+
     return 0;
 }
