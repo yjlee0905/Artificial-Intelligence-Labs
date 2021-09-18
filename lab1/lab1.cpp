@@ -6,15 +6,17 @@ using namespace std;
 int main() {
     Graph g;
 
+    g.insertVertex('S');
+    g.insertVertex('Z');
     g.insertVertex('A');
-    g.insertVertex('B');
     g.insertVertex('C');
-    g.insertVertex('D');
+    g.insertVertex('G');
 
-    g.insertEdge('A', 'B');
-    g.insertEdge('A', 'C');
-    g.insertEdge('A', 'D');
-    g.insertEdge('C', 'D');
+    g.insertEdge('S', 'C');
+    g.insertEdge('S', 'G');
+    g.insertEdge('S', 'Z');
+    g.insertEdge('C', 'A');
+    g.insertEdge('Z', 'A');
 
     g.display();
     return 0;

@@ -33,6 +33,10 @@ char Node::getName() {
 
 Graph::Graph() {
     this->size = 0;
+    // initialize vertices
+    for (int i = 0; i < MAX_VERTICES; ++i) {
+        vertices[i] = -1;
+    }
 }
 
 int Graph::convertToInt(char name) {
@@ -45,8 +49,8 @@ char Graph::convertToChar(int idx) {
 
 void Graph::insertVertex(char name) {
     // TODO Graph validation check : graph full?
-    vertices[size] = name;
-    adjList[size] = nullptr;
+    vertices[convertToInt(name)] = name;
+    adjList[convertToInt(name)] = nullptr;
     size++;
 }
 
@@ -60,7 +64,9 @@ void Graph::insertEdge(char u, char v) {
 
 void Graph::display() {
     cout << "vertex size: " << size << endl;
-    for(int i = 0; i<size; i++) {
+    for(int i = 0; i<MAX_VERTICES; i++) {
+        if (vertices[i] == -1) continue;
+
         cout << vertices[i] << " : ";
         Node* head = adjList[i];
         while (head != NULL) {
