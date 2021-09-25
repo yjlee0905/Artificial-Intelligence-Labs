@@ -14,20 +14,20 @@ void SearchAlgorithms::initVisited() {
     }
 }
 
-void SearchAlgorithms::BFS(char start) {
-    queue<char> q;
+void SearchAlgorithms::BFS(string start) {
+    queue<string> q;
 
     initVisited();
-    visited[convertToInt(start)] = true;
-    cout << getVertex(convertToInt(start)) << " ";
+    visited[convertToOrder(start)] = true;
+    cout << getVertex(convertToOrder(start)) << " ";
     q.push(start);
 
     while (!q.empty()) {
-        char vertex = q.front();
+        string vertex = q.front();
         q.pop();
 
-        for (Node* n = getAdjListNode(convertToInt(vertex)); n != NULL; n = n->getLink()) {
-            int adjNodeId = convertToInt(n->getName());
+        for (Node* n = getAdjListNode(convertToOrder(vertex)); n != NULL; n = n->getLink()) {
+            int adjNodeId = convertToOrder(n->getName());
             if (!visited[adjNodeId]) {
                 cout << getVertex(adjNodeId) << " ";
                 visited[adjNodeId] = true;

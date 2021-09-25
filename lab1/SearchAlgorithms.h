@@ -14,7 +14,7 @@ private:
 
 public:
     void initVisited();
-    void BFS(char start);
+    void BFS(string start);
 
 };
 
