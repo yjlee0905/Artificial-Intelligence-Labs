@@ -13,7 +13,7 @@ private:
 
 public:
     void initVisited();
-    void BFS(string start, string end);
+    vector<string> BFS(string start, string end);
 };
 
 #endif //AI_LABS_SEARCHALGORITHMS_H

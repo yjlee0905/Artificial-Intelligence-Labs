@@ -14,34 +14,48 @@ void SearchAlgorithms::initVisited() {
     }
 }
 
-void SearchAlgorithms::BFS(string start, string end) {
+vector<string> SearchAlgorithms::BFS(string start, string end) {
     queue<string> q;
+    vector<vector<string>> paths;
 
     initVisited();
     visited[convertToOrder(start)] = true;
     cout << "Expanding: " << getVertex(convertToOrder(start)) << endl;
+    vector<string> initialPath;
+    initialPath.push_back(getVertex(convertToOrder(start)));
+    paths.push_back(initialPath);
+
     q.push(start);
 
     while (!q.empty()) {
         string vertex = q.front();
         q.pop();
 
+        vector<string> toBeAdded;
+        // vertex: parent, s: child
+        for (int j = paths.size()-1; j >= 0; j--) {
+            vector<string> path = paths.at(j);
+            if (vertex.compare(path.at(path.size()-1)) == 0) {
+                toBeAdded = path;
+                break;
+            }
+        }
+
         for (int i = 0; i < adjList.at(convertToOrder(vertex)).size(); i++) {
             string s = adjList.at(convertToOrder(vertex)).at(i)->getName();
             if (!visited[convertToOrder(s)]) {
                 cout << "Expanding: " << getVertex(convertToOrder(s)) << endl;
+                vector<string> newPath = toBeAdded;
+                newPath.push_back(s);
+                paths.push_back(newPath);
+
                 visited[convertToOrder(s)] = true;
                 q.push(getVertex(convertToOrder(s)));
+
+                if (s.compare(end) == 0) {
+                    return newPath;
+                }
             }
         }
-
-//        for (Node* n = getAdjListNode(convertToOrder(vertex)); n != NULL; n = n->getLink()) {
-//            int adjNodeId = convertToOrder(n->getName());
-//            if (!visited[adjNodeId]) {
-//                cout << getVertex(adjNodeId) << " ";
-//                visited[adjNodeId] = true;
-//                q.push(getVertex(adjNodeId));
-//            }
-//        }
     }
 }
