@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include "Graph.h"
-//#include "SearchAlgorithms.h"
+#include "SearchAlgorithms.h"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ vector<string> split(string target, string delim);
 
 vector<Node*> parsedVertices;
 vector<pair<string, string>> parsedEdges;
-Graph g;
+SearchAlgorithms g;
 
 int main() {
     // Read file and save vertices, edges
@@ -78,8 +78,8 @@ int main() {
 //    g.insertEdge("D", "G");
 //
 //
-//    cout << "BFS" << endl;
-//    g.BFS("S");
+    cout << "BFS" << endl;
+    g.BFS("S", "G");
 
     return 0;
 }

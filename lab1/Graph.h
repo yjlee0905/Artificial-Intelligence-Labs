@@ -25,10 +25,12 @@ class Graph {
 private:
     int size; // 정점의 개수
     vector<string> vertices; // 정점의 이름
-    vector<vector<Node*>> adjList; // 인접 리스트
 
 public:
+    vector<vector<Node*>> adjList; // 인접 리스트
+
     Graph();
+    int getVerticesSize();
     int convertToOrder(string name);
     void insertVertex(string name, int xPos, int yPos);
     string getVertex(int idx);

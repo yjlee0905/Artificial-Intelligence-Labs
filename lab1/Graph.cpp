@@ -33,6 +33,10 @@ Graph::Graph() {
     }
 }
 
+int Graph::getVerticesSize() {
+    return size;
+}
+
 int Graph::convertToOrder(string name) {
     for (int i = 0; i < vertices.size(); i++) {
         if (vertices[i].compare(name) == 0) {
