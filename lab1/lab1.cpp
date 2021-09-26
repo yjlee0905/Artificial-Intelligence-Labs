@@ -58,30 +58,8 @@ int main() {
 
     g.display();
 
-
-//    SearchAlgorithms g;
-//
-//    g.insertVertex("S");
-//    g.insertVertex("A");
-//    g.insertVertex("C");
-//    g.insertVertex("B");
-//    g.insertVertex("E");
-//    g.insertVertex("D");
-//    g.insertVertex("G");
-//
-//    g.insertEdge("S", "C");
-//    g.insertEdge("S", "A");
-//    g.insertEdge("A", "E");
-//    g.insertEdge("A", "C");
-//    g.insertEdge("A", "B");
-//    g.insertEdge("C", "D");
-//    g.insertEdge("D", "G");
-//
-//
     cout << "BFS" << endl;
     vector<string> res = g.BFS("S", "G");
-    cout << "BFS" << endl;
-
 
     return 0;
 }

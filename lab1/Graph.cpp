@@ -70,7 +70,6 @@ string Graph::getVertex(int idx) {
 void Graph::insertEdge(string start, string end) {
     int startOrder = convertToOrder(start);
     int endOrder = convertToOrder(end);
-    //cout << "u: " << start << "  uNums: " << startOrder << "     v: " << end << "  endOrder: " << endOrder << endl;
 
     // insert to start adjList
     int targetIdx = -1;
@@ -119,7 +118,6 @@ void Graph::createAdjList(vector<Node*> parsed) {
         nodeList.push_back(startNode);
         adjList.push_back(nodeList);
     }
-    //cout << "adjList size: " << adjList.size() << endl;
 }
 
 void Graph::display() {
