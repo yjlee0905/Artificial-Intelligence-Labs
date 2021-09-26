@@ -7,13 +7,6 @@
 
 using namespace std;
 
-//Node::Node(char name, int xPos, int yPos, Node *link) {
-//    this->name = name;
-//    this->xPos = xPos;
-//    this->yPos = yPos;
-//    this->link = link;
-//}
-
 Node::Node(string name, int xPos, int yPos) {
     this->name = name;
     this->xPos = xPos;
@@ -41,7 +34,6 @@ Graph::Graph() {
 }
 
 int Graph::convertToOrder(string name) {
-    //return name - 'A';
     for (int i = 0; i < vertices.size(); i++) {
         if (vertices[i].compare(name) == 0) {
             return i;
@@ -64,11 +56,6 @@ void Graph::insertVertex(string name, int xPos, int yPos) {
         vertices.push_back(name);
     }
 
-    // TODO ordering? to be removed because adjList
-//    Node* newNode = new Node(name, xPos, yPos);
-//    vector<Node*> adjList;
-//    adjList.push_back(newNode);
-//    graph.push_back(adjList);
     size++;
 }
 
@@ -79,7 +66,7 @@ string Graph::getVertex(int idx) {
 void Graph::insertEdge(string start, string end) {
     int startOrder = convertToOrder(start);
     int endOrder = convertToOrder(end);
-    cout << "u: " << start << "  uNums: " << startOrder << "     v: " << end << "  endOrder: " << endOrder << endl;
+    //cout << "u: " << start << "  uNums: " << startOrder << "     v: " << end << "  endOrder: " << endOrder << endl;
 
     // insert to start adjList
     int targetIdx = -1;
@@ -110,11 +97,6 @@ void Graph::insertEdge(string start, string end) {
     } else {
         adjList[endOrder].push_back(new Node(start, 0, 0));
     }
-
-
-//    adjList[startOrder] = new Node(v, adjList[startOrder]);
-//    adjList[endOrder] = new Node(u, adjList[endOrder]);
-    // TODO 여기서 각자의 list에 대해 sorting 진행
 }
 
 void Graph::createAdjList(vector<Node*> parsed) {
@@ -133,20 +115,7 @@ void Graph::createAdjList(vector<Node*> parsed) {
         nodeList.push_back(startNode);
         adjList.push_back(nodeList);
     }
-    cout << "adjList size: " << adjList.size() << endl;
-}
-
-//void Graph::insertInLinkedList(Node *head, Node *newNode) {
-//   if (head->getLink() == NULL) {
-//        head->setLink(newNode);
-//    } else {
-//
-//    }
-//}
-
-
-Node* Graph::getAdjListNode(int idx) {
-    //return adjList[idx];
+    //cout << "adjList size: " << adjList.size() << endl;
 }
 
 void Graph::display() {
@@ -160,16 +129,4 @@ void Graph::display() {
         }
         cout << endl;
     }
-//    cout << "vertex size: " << size << endl;
-//    for(int i = 0; i<MAX_VERTICES; i++) {
-//        if (vertices[i].compare("") == 0) continue;
-//
-//        cout << vertices[i] << " : ";
-//        Node* head = adjList[i];
-//        while (head != NULL) {
-//            cout << vertices[convertToOrder(head->getName())] << " ";
-//            head = head->getLink();
-//        }
-//        cout << endl;
-//    }
 }

@@ -59,10 +59,6 @@ int main() {
     g.display();
 
 
-
-
-
-
 //    SearchAlgorithms g;
 //
 //    g.insertVertex("S");
@@ -81,7 +77,6 @@ int main() {
 //    g.insertEdge("C", "D");
 //    g.insertEdge("D", "G");
 //
-//    g.display();
 //
 //    cout << "BFS" << endl;
 //    g.BFS("S");
@@ -96,7 +91,6 @@ vector<string> split(string target, string delim) {
     while ((pos = target.find(delim)) != std::string::npos) {
         token = target.substr(0, pos);
         splited.push_back(token);
-        //cout << token << " " << endl;
         target.erase(0, pos + delim.length());
     }
 
@@ -106,9 +100,5 @@ vector<string> split(string target, string delim) {
     if (target.length() > 0) {
         splited.push_back(target);
     }
-    //cout << "\n"<<splited.size() << endl;
     return splited;
-
-   // const char delim[] = " \t\r\n\v\f";
-
 }
