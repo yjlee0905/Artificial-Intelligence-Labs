@@ -8,39 +8,41 @@
 
 using namespace std;
 
-// TODO check max vertices
+// TODO check max parsedVertices
 const int MAX_VERTICES = 1024;
 
 class Node {
 private:
     string name; // TODO check name is char or string
-    // int order;
     int xPos;
     int yPos;
-    Node* link;
+    // int order;
+    //Node* link;
 
 public:
-    Node(string name, Node* link);
-    //Node(char name, int xPos, int yPos, Node* link);
-    void setLink(Node* link);
-    Node* getLink();
+    Node(string name, int xPos, int yPos);
     string getName();
+    int getXpos();
+    int getYpos();
+    //Node(char name, int xPos, int yPos, Node* link);
+    //void setLink(Node* link);
+    //Node* getLink();
 };
 
 class Graph {
 private:
     int size; // 정점의 개수
     vector<string> vertices; // 정점의 이름
-    Node* adjList[MAX_VERTICES]; // 인접 리스트
-
-    void insertInLinkedList(Node* head, Node* newNode);
+    vector<vector<Node*>> adjList; // 인접 리스트
+    //Node* adjList[MAX_VERTICES]; // 인접 리스트
 
 public:
     Graph();
     int convertToOrder(string name);
-    void insertVertex(string name);
+    void insertVertex(string name, int xPos, int yPos);
     string getVertex(int idx);
-    void insertEdge(string u, string v);
+    void insertEdge(string start, string end);
+    void createAdjList(vector<Node*> parsed);
     Node* getAdjListNode(int idx);
     void display();
 };
