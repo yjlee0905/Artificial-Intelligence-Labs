@@ -60,6 +60,14 @@ int main() {
 
     cout << "BFS" << endl;
     vector<string> res = g.BFS("S", "G");
+    cout << "Solution:";
+    for (int i = 0; i < res.size(); i++) {
+        if (i == res.size()-1) {
+            cout << " " << res.at(i);
+        } else {
+            cout << " " << res.at(i) << " ->";
+        }
+    }
 
     return 0;
 }
