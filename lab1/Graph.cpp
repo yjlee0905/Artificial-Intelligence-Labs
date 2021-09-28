@@ -29,7 +29,7 @@ Graph::Graph() {
     this->size = 0;
     // initialize parsedVertices
     for (int i = 0; i < vertices.size(); i++) {
-        vertices.at(i) = ""; // TODO check later
+        vertices.at(i) = nullptr; // TODO check later
     }
 }
 
@@ -39,7 +39,7 @@ int Graph::getVerticesSize() {
 
 int Graph::convertToOrder(string name) {
     for (int i = 0; i < vertices.size(); i++) {
-        if (vertices[i].compare(name) == 0) {
+        if (vertices[i]->getName().compare(name) == 0) {
             return i;
         }
     }
@@ -48,23 +48,23 @@ int Graph::convertToOrder(string name) {
 void Graph::insertVertex(string name, int xPos, int yPos) {
     int targetIdx = -1;
     for (int i = 0;  i < vertices.size(); i++) {
-        if (name.compare(vertices.at(i)) < 0) {
+        if (name.compare(vertices.at(i)->getName()) < 0) {
             targetIdx = i;
             break;
         }
     }
-
+    Node* newNode = new Node(name, xPos, yPos);
     if (targetIdx != -1) {
-        vertices.insert(vertices.begin() + targetIdx, name);
+        vertices.insert(vertices.begin() + targetIdx, newNode);
     } else {
-        vertices.push_back(name);
+        vertices.push_back(newNode);
     }
 
     size++;
 }
 
-string Graph::getVertex(int idx) {
-    return vertices.at(idx);
+string Graph::getVertexName(int idx) {
+    return vertices.at(idx)->getName();
 }
 
 void Graph::insertEdge(string start, string end) {
@@ -106,7 +106,7 @@ void Graph::createAdjList(vector<Node*> parsed) {
     for (int i=0; i<vertices.size(); i++) {
         int x, y;
         for (int j = 0; j < parsed.size(); ++j) {
-            if (vertices.at(i).compare(parsed.at(j)->getName()) == 0) {
+            if (vertices.at(i)->getName().compare(parsed.at(j)->getName()) == 0) {
                 x = parsed.at(j)->getXpos();
                 y = parsed.at(j)->getYpos();
                 break;
@@ -114,7 +114,7 @@ void Graph::createAdjList(vector<Node*> parsed) {
         }
 
         vector<Node*> nodeList;
-        Node* startNode = new Node(vertices.at(i), x, y);
+        Node* startNode = new Node(vertices.at(i)->getName(), x, y);
         nodeList.push_back(startNode);
         adjList.push_back(nodeList);
     }

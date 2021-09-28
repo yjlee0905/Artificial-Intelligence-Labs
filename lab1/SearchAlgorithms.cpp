@@ -20,9 +20,9 @@ vector<string> SearchAlgorithms::BFS(string start, string end) {
 
     initVisited();
     visited[convertToOrder(start)] = true;
-    cout << "Expanding: " << getVertex(convertToOrder(start)) << endl;
+    cout << "Expanding: " << getVertexName(convertToOrder(start)) << endl;
     vector<string> initialPath;
-    initialPath.push_back(getVertex(convertToOrder(start)));
+    initialPath.push_back(getVertexName(convertToOrder(start)));
     paths.push_back(initialPath);
 
     q.push(start);
@@ -44,13 +44,13 @@ vector<string> SearchAlgorithms::BFS(string start, string end) {
         for (int i = 0; i < adjList.at(convertToOrder(vertex)).size(); i++) {
             string s = adjList.at(convertToOrder(vertex)).at(i)->getName();
             if (!visited[convertToOrder(s)]) {
-                cout << "Expanding: " << getVertex(convertToOrder(s)) << endl;
+                cout << "Expanding: " << getVertexName(convertToOrder(s)) << endl;
                 vector<string> newPath = toBeAdded;
                 newPath.push_back(s);
                 paths.push_back(newPath);
 
                 visited[convertToOrder(s)] = true;
-                q.push(getVertex(convertToOrder(s)));
+                q.push(getVertexName(convertToOrder(s)));
 
                 if (s.compare(end) == 0) {
                     return newPath;
