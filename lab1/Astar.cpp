@@ -74,7 +74,10 @@ vector<string> Astar::AstarAlgo(string start, string end) {
             double h = getEuclideanDistance(vertices[convertToOrder(children.at(i)->getName())], vertices[convertToOrder(end)]);
             double f = g + h;
 
-            cout << lastNode << " -> " << children.at(i)->getName() << " ; g=" << g <<" h=" << h << " = " << f << endl;
+            printf("%s -> %s ; g=%.2lf h=%.2lf = %.2lf\n",
+                   lastNode.c_str(), children.at(i)->getName().c_str(), g, h, f);
+
+            //cout << lastNode << " -> " << children.at(i)->getName() << " ; g=" << g <<" h=" << h << " = " << f << endl;
 
             pair<vector<string>, double> newCaclulatedPath;
             newCaclulatedPath.first = tmpCurPath;
