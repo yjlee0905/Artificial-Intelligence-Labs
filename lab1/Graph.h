@@ -13,6 +13,7 @@ private:
     string name; // TODO check name is char or string
     int xPos;
     int yPos;
+    double g; // only used in A*
 
 public:
     Node(string name, int xPos, int yPos);

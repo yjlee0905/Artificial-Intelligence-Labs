@@ -7,16 +7,25 @@
 
 #include "Graph.h"
 
+struct CalculationInfo{
+    string name;
+    int xPos;
+    int yPos;
+    double g;
+    vector<string> path;
+};
+
 
 class Astar : public Graph {
 private:
     bool isDestination(string cur, string goal);
     double getEuclideanDistance(Node* start, Node* end);
-    bool isIncluded(string cur, vector<pair<string, double>> lst);
+    bool isIncluded(string cur, vector<pair<CalculationInfo, double>> lst);
+    double calculateG(vector<string> path);
 
 public:
-    int getIdxOfNodeWithLeastFvalue(vector<pair<string, double>> openLst);
-    void AstarAlgo(string start, string end);
+    int getIdxOfNodeWithLeastCost(vector<pair<vector<string>, double>> calculated);
+    vector<string> AstarAlgo(string start, string end);
 };
 
 
