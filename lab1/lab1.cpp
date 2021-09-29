@@ -3,6 +3,7 @@
 #include <vector>
 #include "Graph.h"
 #include "SearchAlgorithms.h"
+#include "IterativeDeepeningSearch.h"
 #include "Astar.h"
 
 using namespace std;
@@ -11,7 +12,7 @@ vector<string> split(string target, string delim);
 
 vector<Node*> parsedVertices;
 vector<pair<string, string>> parsedEdges;
-Astar g;
+IterativeDeepeningSearch g;
 
 int main() {
     // Read file and save vertices, edges
@@ -70,16 +71,27 @@ int main() {
 //        }
 //    }
 
-    cout << "A*" << endl;
-    vector<string> res1 = g.AstarAlgo("S", "G");
-    cout << "Solution:";
-    for (int i = 0; i < res1.size(); i++) {
-        if (i == res1.size()-1) {
-            cout << " " << res1.at(i);
-        } else {
-            cout << " " << res1.at(i) << " ->";
-        }
-    }
+//    cout << "A*" << endl;
+//    vector<string> res1 = g.AstarAlgo("S", "G");
+//    cout << "Solution:";
+//    for (int i = 0; i < res1.size(); i++) {
+//        if (i == res1.size()-1) {
+//            cout << " " << res1.at(i);
+//        } else {
+//            cout << " " << res1.at(i) << " ->";
+//        }
+//    }
+
+    cout << "DFS" << endl;
+    g.DFS("S");
+//    cout << "Solution:";
+//    for (int i = 0; i < res1.size(); i++) {
+//        if (i == res1.size()-1) {
+//            cout << " " << res1.at(i);
+//        } else {
+//            cout << " " << res1.at(i) << " ->";
+//        }
+//    }
 
     return 0;
 }
