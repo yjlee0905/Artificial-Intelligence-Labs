@@ -8,6 +8,7 @@
 
 using namespace std;
 
+void readFileAndInit(string filename);
 vector<string> split(string target, string delim);
 
 vector<Node*> parsedVertices;
@@ -16,8 +17,39 @@ Astar g;
 
 int main() {
     // Read file and save vertices, edges
+    readFileAndInit("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex2.txt");
+
+//    cout << "BFS" << endl;
+//    vector<string> res = g.BFSalgo("S", "G");
+//    cout << "Solution:";
+//    for (int i = 0; i < res.size(); i++) {
+//        if (i == res.size()-1) {
+//            cout << " " << res.at(i);
+//        } else {
+//            cout << " " << res.at(i) << " ->";
+//        }
+//    }
+
+    cout << "A*" << endl;
+    vector<string> res1 = g.AstarAlgo("S", "G");
+    cout << "Solution:";
+    for (int i = 0; i < res1.size(); i++) {
+        if (i == res1.size()-1) {
+            cout << " " << res1.at(i);
+        } else {
+            cout << " " << res1.at(i) << " ->";
+        }
+    }
+
+//    cout << "IDS" << endl;
+//    g.IDS("S", "G", 2);
+
+    return 0;
+}
+
+void readFileAndInit(string filename) {
     ifstream in;
-    in.open("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex2.txt");
+    in.open(filename);
     if (!in) {
         cerr << "Cannot open file!" << endl;
         exit(1);
@@ -57,35 +89,6 @@ int main() {
     for (int i = 0; i < parsedEdges.size(); ++i) {
         g.insertEdge(parsedEdges.at(i).first, parsedEdges.at(i).second);
     }
-
-    //g.display();
-
-//    cout << "BFS" << endl;
-//    vector<string> res = g.BFSalgo("S", "G");
-//    cout << "Solution:";
-//    for (int i = 0; i < res.size(); i++) {
-//        if (i == res.size()-1) {
-//            cout << " " << res.at(i);
-//        } else {
-//            cout << " " << res.at(i) << " ->";
-//        }
-//    }
-
-    cout << "A*" << endl;
-    vector<string> res1 = g.AstarAlgo("S", "G");
-    cout << "Solution:";
-    for (int i = 0; i < res1.size(); i++) {
-        if (i == res1.size()-1) {
-            cout << " " << res1.at(i);
-        } else {
-            cout << " " << res1.at(i) << " ->";
-        }
-    }
-
-//    cout << "IDS" << endl;
-//    g.IDS("S", "G", 2);
-
-    return 0;
 }
 
 vector<string> split(string target, string delim) {

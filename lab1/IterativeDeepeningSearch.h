@@ -17,11 +17,6 @@ public:
     void clearVisited();
     void IDS(string start, string end, int startDepth);
     bool DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path);
-
-
-
-
-
 };
 
 #endif //AI_LABS_ITERATIVEDEEPENINGSEARCH_H
