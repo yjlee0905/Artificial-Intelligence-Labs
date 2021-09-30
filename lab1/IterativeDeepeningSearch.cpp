@@ -20,15 +20,16 @@ void IterativeDeepeningSearch::clearVisited() {
     }
 }
 
-void IterativeDeepeningSearch::IDS(string start, string end, int startDepth) {
+vector<string> IterativeDeepeningSearch::runAlgorithm(string start, string end, int startDepth) {
     stack<string> resPath;
+    vector<string> empty;
 
     initVisited();
 
     while (true) {
         clearVisited();
         if (DFSrecursive(start, end, startDepth, startDepth++, resPath)) {
-            return;
+            return empty;
         }
     }
 }

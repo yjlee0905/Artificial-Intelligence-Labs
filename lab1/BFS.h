@@ -11,9 +11,10 @@ class BFS : public Graph {
 private:
     vector<bool> visited;
 
-public:
     void initVisited();
-    vector<string> BFSalgo(string start, string end);
+
+public:
+    vector<string> runAlgorithm(string start, string end, int startDepth);
 };
 
 #endif //AI_LABS_BFS_H

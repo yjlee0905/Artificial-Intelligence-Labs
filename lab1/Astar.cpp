@@ -52,7 +52,7 @@ void Astar::printCurPath(vector<string> path) {
     cout << endl;
 }
 
-vector<string> Astar::AstarAlgo(string start, string end) {
+vector<string> Astar::runAlgorithm(string start, string end, int initialDepth) {
     vector<pair<vector<string>, double>> calculatedPaths;
 
     // set start node

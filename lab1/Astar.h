@@ -14,8 +14,9 @@ private:
     double calculateG(vector<string> path);
     int getIdxOfNodeWithLeastCost(vector<pair<vector<string>, double>> calculated);
     void printCurPath(vector<string> path);
+
 public:
-    vector<string> AstarAlgo(string start, string end);
+    vector<string> runAlgorithm(string start, string end, int startDepth);
 };
 
 #endif //AI_LABS_ASTAR_H

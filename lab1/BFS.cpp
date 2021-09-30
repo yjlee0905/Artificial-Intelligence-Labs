@@ -14,7 +14,7 @@ void BFS::initVisited() {
     }
 }
 
-vector<string> BFS::BFSalgo(string start, string end) {
+vector<string> BFS::runAlgorithm(string start, string end, int startDepth) {
     queue<string> q;
     vector<vector<string>> paths;
 

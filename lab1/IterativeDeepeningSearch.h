@@ -12,11 +12,13 @@ class IterativeDeepeningSearch : public Graph {
 private:
     vector<bool> visited; // for IDS
 
-public:
     void initVisited();
     void clearVisited();
-    void IDS(string start, string end, int startDepth);
     bool DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path);
+
+public:
+
+    vector<string> runAlgorithm(string start, string end, int startDepth);
 };
 
 #endif //AI_LABS_ITERATIVEDEEPENINGSEARCH_H

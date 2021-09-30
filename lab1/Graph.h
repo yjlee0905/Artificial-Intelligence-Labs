@@ -37,6 +37,9 @@ public:
     void insertEdge(string start, string end);
     void createAdjList(vector<Node*> parsed);
     void display();
+
+    // for the algorithms
+    virtual vector<string> runAlgorithm(string start, string end, int startDepth) = 0;
 };
 
 #endif //AI_LABS_GRAPH_H
