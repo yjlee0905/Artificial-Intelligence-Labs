@@ -53,6 +53,16 @@ void Astar::printCurPath(vector<string> path) {
 }
 
 vector<string> Astar::runAlgorithm(string start, string end, int initialDepth, bool isVerbose) {
+    if (convertToOrder(start) == -1) {
+        cout << "-s referencing a vertex not in the graph file" << endl;
+        exit(1);
+    }
+
+    if (convertToOrder(end) == -1) {
+        cout << "-e referencing a vertex not in the graph file" << endl;
+        exit(1);
+    }
+
     vector<pair<vector<string>, double>> calculatedPaths;
 
     // set start node

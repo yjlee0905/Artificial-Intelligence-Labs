@@ -24,6 +24,21 @@ vector<string> IterativeDeepeningSearch::runAlgorithm(string start, string end, 
     stack<string> resPath;
     vector<string> empty;
 
+    if (convertToOrder(start) == -1) {
+        cout << "-s referencing a vertex not in the graph file" << endl;
+        exit(1);
+    }
+
+    if (convertToOrder(end) == -1) {
+        cout << "-e referencing a vertex not in the graph file" << endl;
+        exit(1);
+    }
+
+    if (startDepth == -1) {
+        cout << "-d[initial depth] is omitted for the option. Just start with depth=1" << endl;
+        startDepth = 1;
+    }
+
     initVisited();
 
     startDepth = startDepth - 1;
@@ -57,6 +72,7 @@ bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDep
             }
             reverseOrder.pop();
         }
+        cout << endl;
         return true;
     }
 

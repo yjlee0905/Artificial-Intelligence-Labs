@@ -15,6 +15,16 @@ void BFS::initVisited() {
 }
 
 vector<string> BFS::runAlgorithm(string start, string end, int startDepth, bool isVerbose) {
+    if (convertToOrder(start) == -1) {
+        cout << "-s referencing a vertex not in the graph file" << endl;
+        exit(1);
+    }
+
+    if (convertToOrder(end) == -1) {
+        cout << "-e referencing a vertex not in the graph file" << endl;
+        exit(1);
+    }
+
     queue<string> q;
     vector<vector<string>> paths;
 

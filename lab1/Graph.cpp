@@ -43,6 +43,7 @@ int Graph::convertToOrder(string name) {
             return i;
         }
     }
+    return -1;
 }
 
 void Graph::insertVertex(string name, int xPos, int yPos) {
