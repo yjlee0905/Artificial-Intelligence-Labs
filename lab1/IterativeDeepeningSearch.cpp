@@ -20,7 +20,7 @@ void IterativeDeepeningSearch::clearVisited() {
     }
 }
 
-vector<string> IterativeDeepeningSearch::runAlgorithm(string start, string end, int startDepth) {
+vector<string> IterativeDeepeningSearch::runAlgorithm(string start, string end, int startDepth, bool isVerbose) {
     stack<string> resPath;
     vector<string> empty;
 
@@ -30,13 +30,13 @@ vector<string> IterativeDeepeningSearch::runAlgorithm(string start, string end, 
 
     while (true) {
         clearVisited();
-        if (DFSrecursive(start, end, startDepth, ++startDepth, resPath)) {
+        if (DFSrecursive(start, end, startDepth, ++startDepth, resPath, isVerbose)) {
             return empty;
         }
     }
 }
 
-bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path) {
+bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path, bool isVerbose) {
     visited[convertToOrder(start)] = true;
     path.push(start);
 
@@ -61,16 +61,20 @@ bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDep
     }
 
     if (curDepth <= 0) {
-        cout << "hit depth=" << depth << ": " << start << endl;
+        if (isVerbose) {
+            cout << "hit depth=" << depth << ": " << start << endl;
+        }
         return false;
     }
 
-    cout << "Expand: " << start << endl;
+    if (isVerbose) {
+        cout << "Expand: " << start << endl;
+    }
 
     vector<Node*> adjInfo = adjList.at(convertToOrder(start));
     for (int i = 1; i < adjInfo.size(); i++) {
         if (visited[convertToOrder(adjInfo.at(i)->getName())] == false) {
-            if (DFSrecursive(adjInfo.at(i)->getName(), end, curDepth-1, depth, path) == true) {
+            if (DFSrecursive(adjInfo.at(i)->getName(), end, curDepth-1, depth, path, isVerbose) == true) {
                 return true;
             }
         }

@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     //readFileAndInit("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex2.txt");
     readFileAndInit(fileName);
 
-    vector<string> finalPath = g->runAlgorithm(startNode, endNode, initialDepth);
+    vector<string> finalPath = g->runAlgorithm(startNode, endNode, initialDepth, isV);
     if (finalPath.size() > 0) {
         cout << "Solution:";
         for (int i = 0; i < finalPath.size(); i++) {

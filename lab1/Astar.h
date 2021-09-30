@@ -16,7 +16,7 @@ private:
     void printCurPath(vector<string> path);
 
 public:
-    vector<string> runAlgorithm(string start, string end, int startDepth);
+    vector<string> runAlgorithm(string start, string end, int startDepth, bool isVerbose);
 };
 
 #endif //AI_LABS_ASTAR_H

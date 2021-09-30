@@ -52,7 +52,7 @@ void Astar::printCurPath(vector<string> path) {
     cout << endl;
 }
 
-vector<string> Astar::runAlgorithm(string start, string end, int initialDepth) {
+vector<string> Astar::runAlgorithm(string start, string end, int initialDepth, bool isVerbose) {
     vector<pair<vector<string>, double>> calculatedPaths;
 
     // set start node
@@ -71,7 +71,9 @@ vector<string> Astar::runAlgorithm(string start, string end, int initialDepth) {
         }
         calculatedPaths.erase(calculatedPaths.begin() + idx);
 
-        printCurPath(curPath.first);
+        if (isVerbose) {
+            printCurPath(curPath.first);
+        }
 
         // expand curPath
         string lastNode = curPath.first.at(curPath.first.size()-1);
@@ -86,9 +88,11 @@ vector<string> Astar::runAlgorithm(string start, string end, int initialDepth) {
             double h = getEuclideanDistance(vertices[convertToOrder(children.at(i)->getName())], vertices[convertToOrder(end)]);
             double f = g + h;
 
-            printf("%s -> %s ; g=%.2lf h=%.2lf = %.2lf\n",
-                   lastNode.c_str(), children.at(i)->getName().c_str(), g, h, f);
-            //cout << lastNode << " -> " << children.at(i)->getName() << " ; g=" << g <<" h=" << h << " = " << f << endl;
+            if (isVerbose) {
+                printf("%s -> %s ; g=%.2lf h=%.2lf = %.2lf\n",
+                       lastNode.c_str(), children.at(i)->getName().c_str(), g, h, f);
+                //cout << lastNode << " -> " << children.at(i)->getName() << " ; g=" << g <<" h=" << h << " = " << f << endl;
+            }
 
             pair<vector<string>, double> newCaclulatedPath;
             newCaclulatedPath.first = tmpCurPath;

@@ -14,13 +14,15 @@ void BFS::initVisited() {
     }
 }
 
-vector<string> BFS::runAlgorithm(string start, string end, int startDepth) {
+vector<string> BFS::runAlgorithm(string start, string end, int startDepth, bool isVerbose) {
     queue<string> q;
     vector<vector<string>> paths;
 
     initVisited();
     visited[convertToOrder(start)] = true;
-    cout << "Expanding: " << getVertexName(convertToOrder(start)) << endl;
+    if (isVerbose) {
+        cout << "Expanding: " << getVertexName(convertToOrder(start)) << endl;
+    }
     vector<string> initialPath;
     initialPath.push_back(getVertexName(convertToOrder(start)));
     paths.push_back(initialPath);
@@ -45,7 +47,9 @@ vector<string> BFS::runAlgorithm(string start, string end, int startDepth) {
         for (int i = 0; i < adjList.at(convertToOrder(vertex)).size(); i++) {
             string s = adjList.at(convertToOrder(vertex)).at(i)->getName();
             if (!visited[convertToOrder(s)]) {
-                cout << "Expanding: " << getVertexName(convertToOrder(s)) << endl;
+                if (isVerbose) {
+                    cout << "Expanding: " << getVertexName(convertToOrder(s)) << endl;
+                }
                 vector<string> newPath = toBeAdded;
                 newPath.push_back(s);
                 paths.push_back(newPath);

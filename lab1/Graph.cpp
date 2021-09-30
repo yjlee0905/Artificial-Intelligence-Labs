@@ -134,4 +134,4 @@ void Graph::display() {
     }
 }
 
-vector<string> Graph::runAlgorithm(string start, string end, int startDepth) {}
+vector<string> Graph::runAlgorithm(string start, string end, int startDepth, bool isVerbose) {}

@@ -16,8 +16,8 @@ private:
     void clearVisited();
 
 public:
-    bool DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path);
-    vector<string> runAlgorithm(string start, string end, int startDepth);
+    bool DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path, bool isVerbose);
+    vector<string> runAlgorithm(string start, string end, int startDepth, bool isVerbose);
 };
 
 #endif //AI_LABS_ITERATIVEDEEPENINGSEARCH_H

@@ -14,7 +14,7 @@ private:
     void initVisited();
 
 public:
-    vector<string> runAlgorithm(string start, string end, int startDepth);
+    vector<string> runAlgorithm(string start, string end, int startDepth, bool isVerbose);
 };
 
 #endif //AI_LABS_BFS_H

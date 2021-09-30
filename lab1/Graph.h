@@ -39,7 +39,7 @@ public:
     void display();
 
     // for the algorithms
-    virtual vector<string> runAlgorithm(string start, string end, int startDepth) = 0;
+    virtual vector<string> runAlgorithm(string start, string end, int startDepth, bool isVerbose) = 0;
 };
 
 #endif //AI_LABS_GRAPH_H
