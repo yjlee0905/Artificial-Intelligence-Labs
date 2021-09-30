@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>
 #include <fstream>
 #include <vector>
 #include "Graph.h"
@@ -13,11 +14,75 @@ vector<string> split(string target, string delim);
 
 vector<Node*> parsedVertices;
 vector<pair<string, string>> parsedEdges;
-Astar g;
 
-int main() {
+BFS g;
+
+int main(int argc, char* argv[]) {
+    int c;
+    char algorithm;
+    string startNode;
+    string endNode;
+    bool isV = false;
+    int initialDepth = -1;
+
+    while ((c = getopt(argc, argv, "s:e:a:d:v")) != -1) {
+        switch (c) {
+            case 'a':
+                sscanf(optarg, "%c", &algorithm);
+                break;
+            case 's':
+                //sscanf(optarg, "%s", startNode);
+                for(; *optarg != '\0'; optarg++) {
+                    startNode += *optarg;
+                }
+                cout << startNode << endl;
+                break;
+            case 'e':
+                //sscanf(optarg, "%s", endNode);
+                for(; *optarg != '\0'; optarg++) {
+                    endNode += *optarg;
+                }
+                cout << endNode << endl;
+                break;
+            case 'v':
+                isV = true;
+                break;
+            case 'd':
+                sscanf(optarg, "%d", &initialDepth);
+                break;
+            default:
+                cout << c << " is unsupported option in this program." << endl;
+                exit(1);
+        }
+    }
+
+    string fileName = argv[optind];
+
     // Read file and save vertices, edges
-    readFileAndInit("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex2.txt");
+    //readFileAndInit("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex2.txt");
+    readFileAndInit(fileName);
+
+    switch (algorithm) {
+        case 'B':
+
+            break;
+        case 'I':
+//            IterativeDeepeningSearch idsAlgo;
+//            idsAlgo.IDS(startNode, endNode, initialDepth);
+            break;
+        case 'A':
+//            Astar astarAlo;
+//            vector<string> finalPath = astarAlo.AstarAlgo(startNode, endNode);
+//            cout << "Solution:";
+//            for (int i = 0; i < finalPath.size(); i++) {
+//                if (i == finalPath.size()-1) {
+//                    cout << " " << finalPath.at(i);
+//                } else {
+//                    cout << " " << finalPath.at(i) << " ->";
+//                }
+//            }
+            break;
+    }
 
 //    cout << "BFS" << endl;
 //    vector<string> res = g.BFSalgo("S", "G");
@@ -30,16 +95,6 @@ int main() {
 //        }
 //    }
 
-    cout << "A*" << endl;
-    vector<string> res1 = g.AstarAlgo("S", "G");
-    cout << "Solution:";
-    for (int i = 0; i < res1.size(); i++) {
-        if (i == res1.size()-1) {
-            cout << " " << res1.at(i);
-        } else {
-            cout << " " << res1.at(i) << " ->";
-        }
-    }
 
 //    cout << "IDS" << endl;
 //    g.IDS("S", "G", 2);
