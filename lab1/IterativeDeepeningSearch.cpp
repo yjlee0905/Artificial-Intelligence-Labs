@@ -20,15 +20,10 @@ void IterativeDeepeningSearch::clearVisited() {
     }
 }
 
-
-void IterativeDeepeningSearch::DFS(string start, string end, int startDepth) {
-    initVisited();
-//    for (int limit = startDepth; limit <=4 ; limit++) {
-//        DFSrecursive(start, end, limit);
-//    }
-    //DFSrecursive(start, end, startDepth);
-    //DFSrecursive(start, end, startDepth+1);
+void IterativeDeepeningSearch::IDS(string start, string end, int startDepth) {
     stack<string> resPath;
+
+    initVisited();
 
     while (true) {
         clearVisited();
@@ -39,7 +34,7 @@ void IterativeDeepeningSearch::DFS(string start, string end, int startDepth) {
 }
 
 bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path) {
-    visited[convertToOrder(start)] = true; // 현재 vertex 방문 처리
+    visited[convertToOrder(start)] = true;
     path.push(start);
 
     if (start.compare(end) == 0) {
@@ -78,32 +73,5 @@ bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDep
         }
     }
     path.pop();
-    return false;
-}
-
-bool IterativeDeepeningSearch::DLS(string start, string end, int limit) {
-    if (start.compare(end) == 0) {
-        return true;
-    }
-
-    if (limit <= 0) {
-        return false;
-    }
-
-    vector<Node*> lst = adjList.at(convertToOrder(start));
-    for (int i = 0; i < lst.size(); i++) {
-        if (DLS(lst.at(i)->getName(), end, limit)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool IterativeDeepeningSearch::IDDLS(string start, string end, int initialDepth, int maxDepth) {
-    for (int depth = initialDepth; depth <= maxDepth; depth++) {
-        if (DLS(start, end, depth) == true) {
-            return true;
-        }
-    }
     return false;
 }

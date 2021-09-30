@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include "Graph.h"
-#include "SearchAlgorithms.h"
+#include "BFS.h"
 #include "IterativeDeepeningSearch.h"
 #include "Astar.h"
 
@@ -12,12 +12,12 @@ vector<string> split(string target, string delim);
 
 vector<Node*> parsedVertices;
 vector<pair<string, string>> parsedEdges;
-IterativeDeepeningSearch g;
+Astar g;
 
 int main() {
     // Read file and save vertices, edges
     ifstream in;
-    in.open("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex1.txt");
+    in.open("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex2.txt");
     if (!in) {
         cerr << "Cannot open file!" << endl;
         exit(1);
@@ -28,7 +28,7 @@ int main() {
     string line;
     while (getline(in, line)) {
         if (line.find("#") == 0 || line.size() == 0) continue;
-        cout << line << endl;
+        //cout << line << endl;
         parsed = split(line, delim);
 
         // Edge
@@ -58,10 +58,10 @@ int main() {
         g.insertEdge(parsedEdges.at(i).first, parsedEdges.at(i).second);
     }
 
-    g.display();
+    //g.display();
 
 //    cout << "BFS" << endl;
-//    vector<string> res = g.BFS("S", "G");
+//    vector<string> res = g.BFSalgo("S", "G");
 //    cout << "Solution:";
 //    for (int i = 0; i < res.size(); i++) {
 //        if (i == res.size()-1) {
@@ -71,27 +71,19 @@ int main() {
 //        }
 //    }
 
-//    cout << "A*" << endl;
-//    vector<string> res1 = g.AstarAlgo("S", "G");
-//    cout << "Solution:";
-//    for (int i = 0; i < res1.size(); i++) {
-//        if (i == res1.size()-1) {
-//            cout << " " << res1.at(i);
-//        } else {
-//            cout << " " << res1.at(i) << " ->";
-//        }
-//    }
+    cout << "A*" << endl;
+    vector<string> res1 = g.AstarAlgo("S", "G");
+    cout << "Solution:";
+    for (int i = 0; i < res1.size(); i++) {
+        if (i == res1.size()-1) {
+            cout << " " << res1.at(i);
+        } else {
+            cout << " " << res1.at(i) << " ->";
+        }
+    }
 
-    cout << "DFS" << endl;
-    g.DFS("S", "G", 2);
-//    cout << "Solution:";
-//    for (int i = 0; i < res1.size(); i++) {
-//        if (i == res1.size()-1) {
-//            cout << " " << res1.at(i);
-//        } else {
-//            cout << " " << res1.at(i) << " ->";
-//        }
-//    }
+//    cout << "IDS" << endl;
+//    g.IDS("S", "G", 2);
 
     return 0;
 }

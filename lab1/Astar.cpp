@@ -20,6 +20,14 @@ double Astar::getEuclideanDistance(Node *start, Node *end) {
     return sqrt(pow(start->getXpos() - end->getXpos(), 2) + pow(start->getYpos() - end->getYpos(), 2));
 }
 
+double Astar::calculateG(vector<string> path) {
+    double distance = 0.0;
+    for (int i = 0; i <= path.size()-2; i++) {
+        distance += getEuclideanDistance(vertices[convertToOrder(path.at(i))], vertices[convertToOrder(path.at(i+1))]);
+    }
+    return distance;
+}
+
 int Astar::getIdxOfNodeWithLeastCost(vector<pair<vector<string>, double>> calculated) {
     double minVale = DBL_MAX;
     int idx;
@@ -32,16 +40,20 @@ int Astar::getIdxOfNodeWithLeastCost(vector<pair<vector<string>, double>> calcul
     return idx;
 }
 
-double Astar::calculateG(vector<string> path) {
-    double distance = 0.0;
-    for (int i = 0; i <= path.size()-2; i++) {
-        distance += getEuclideanDistance(vertices[convertToOrder(path.at(i))], vertices[convertToOrder(path.at(i+1))]);
+void Astar::printCurPath(vector<string> path) {
+    cout << "adding ";
+    for (int i = 0; i < path.size(); i++) {
+        if (i == path.size()-1) {
+            cout << path.at(i);
+        } else {
+            cout << path.at(i) << " -> ";
+        }
     }
-    return distance;
+    cout << endl;
 }
 
 vector<string> Astar::AstarAlgo(string start, string end) {
-    vector<pair<vector<string>, double>> calculatedPaths; // 지금까지의 path, 거리
+    vector<pair<vector<string>, double>> calculatedPaths;
 
     // set start node
     vector<string> startNode;
@@ -76,7 +88,6 @@ vector<string> Astar::AstarAlgo(string start, string end) {
 
             printf("%s -> %s ; g=%.2lf h=%.2lf = %.2lf\n",
                    lastNode.c_str(), children.at(i)->getName().c_str(), g, h, f);
-
             //cout << lastNode << " -> " << children.at(i)->getName() << " ; g=" << g <<" h=" << h << " = " << f << endl;
 
             pair<vector<string>, double> newCaclulatedPath;
@@ -85,16 +96,4 @@ vector<string> Astar::AstarAlgo(string start, string end) {
             calculatedPaths.push_back(newCaclulatedPath);
         }
     }
-}
-
-void Astar::printCurPath(vector<string> path) {
-    cout << "adding ";
-    for (int i = 0; i < path.size(); i++) {
-        if (i == path.size()-1) {
-            cout << path.at(i);
-        } else {
-            cout << path.at(i) << " -> ";
-        }
-    }
-    cout << endl;
 }

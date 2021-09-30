@@ -10,7 +10,7 @@ using namespace std;
 
 class Node {
 private:
-    string name; // TODO check name is char or string
+    string name;
     int xPos;
     int yPos;
 
@@ -23,11 +23,11 @@ public:
 
 class Graph {
 private:
-    int size; // 정점의 개수
+    int size; // number of vertices
 
 public:
-    vector<Node*> vertices; // 정점의 이름
-    vector<vector<Node*>> adjList; // 인접 리스트
+    vector<Node*> vertices;
+    vector<vector<Node*>> adjList;
 
     Graph();
     int getVerticesSize();

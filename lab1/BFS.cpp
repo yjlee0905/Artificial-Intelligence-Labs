@@ -4,17 +4,17 @@
 
 #include <iostream>
 #include <queue>
-#include "SearchAlgorithms.h"
+#include "BFS.h"
 
 using namespace std;
 
-void SearchAlgorithms::initVisited() {
+void BFS::initVisited() {
     for (int i=0; i < getVerticesSize(); i++) {
         visited.push_back(false);
     }
 }
 
-vector<string> SearchAlgorithms::BFS(string start, string end) {
+vector<string> BFS::BFSalgo(string start, string end) {
     queue<string> q;
     vector<vector<string>> paths;
 

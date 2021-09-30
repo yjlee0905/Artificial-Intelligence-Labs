@@ -80,6 +80,7 @@ void Graph::insertEdge(string start, string end) {
         }
     }
 
+    // insert x, y position only in vertices, because the order of input file varies.
     if (targetIdx != -1) {
         adjList[startOrder].insert(adjList[startOrder].begin() + targetIdx, new Node(end, 0, 0));
     } else {
