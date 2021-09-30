@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <stack>
 #include "IterativeDeepeningSearch.h"
 
 using namespace std;
@@ -27,19 +28,37 @@ void IterativeDeepeningSearch::DFS(string start, string end, int startDepth) {
 //    }
     //DFSrecursive(start, end, startDepth);
     //DFSrecursive(start, end, startDepth+1);
+    stack<string> resPath;
 
     while (true) {
         clearVisited();
-        if (DFSrecursive(start, end, startDepth, startDepth++)) {
+        if (DFSrecursive(start, end, startDepth, startDepth++, resPath)) {
             return;
         }
     }
 }
 
-bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDepth, int depth) {
+bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path) {
     visited[convertToOrder(start)] = true; // 현재 vertex 방문 처리
+    path.push(start);
 
     if (start.compare(end) == 0) {
+
+        stack<string> reverseOrder;
+        while (!path.empty()) {
+            reverseOrder.push(path.top());
+            path.pop();
+        }
+
+        cout << "Solution: ";
+        while (!reverseOrder.empty()) {
+            if (reverseOrder.size() == 1) {
+                cout << reverseOrder.top();
+            } else {
+                cout << reverseOrder.top() << " -> ";
+            }
+            reverseOrder.pop();
+        }
         return true;
     }
 
@@ -53,11 +72,12 @@ bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDep
     vector<Node*> adjInfo = adjList.at(convertToOrder(start));
     for (int i = 1; i < adjInfo.size(); i++) {
         if (visited[convertToOrder(adjInfo.at(i)->getName())] == false) {
-            if (DFSrecursive(adjInfo.at(i)->getName(), end, curDepth-1, depth) == true) {
+            if (DFSrecursive(adjInfo.at(i)->getName(), end, curDepth-1, depth, path) == true) {
                 return true;
             }
         }
     }
+    path.pop();
     return false;
 }
 

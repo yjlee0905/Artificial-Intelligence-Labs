@@ -17,7 +17,7 @@ IterativeDeepeningSearch g;
 int main() {
     // Read file and save vertices, edges
     ifstream in;
-    in.open("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex2.txt");
+    in.open("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex1.txt");
     if (!in) {
         cerr << "Cannot open file!" << endl;
         exit(1);
