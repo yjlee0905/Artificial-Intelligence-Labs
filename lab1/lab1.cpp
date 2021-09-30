@@ -83,7 +83,7 @@ int main() {
 //    }
 
     cout << "DFS" << endl;
-    g.DFS("S");
+    g.DFS("S", "G", 2);
 //    cout << "Solution:";
 //    for (int i = 0; i < res1.size(); i++) {
 //        if (i == res1.size()-1) {

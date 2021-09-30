@@ -41,6 +41,7 @@ vector<string> SearchAlgorithms::BFS(string start, string end) {
             }
         }
 
+        // TODO start from 1?
         for (int i = 0; i < adjList.at(convertToOrder(vertex)).size(); i++) {
             string s = adjList.at(convertToOrder(vertex)).at(i)->getName();
             if (!visited[convertToOrder(s)]) {

@@ -13,19 +13,79 @@ void IterativeDeepeningSearch::initVisited() {
     }
 }
 
-void IterativeDeepeningSearch::DFS(string start) {
-    initVisited();
-    DFSrecursive(start);
+void IterativeDeepeningSearch::clearVisited() {
+    for (int i = 0; i < getVerticesSize(); i++) {
+        visited.at(i) = false;
+    }
 }
 
-void IterativeDeepeningSearch::DFSrecursive(string start) {
+
+void IterativeDeepeningSearch::DFS(string start, string end, int startDepth) {
+    initVisited();
+//    for (int limit = startDepth; limit <=4 ; limit++) {
+//        DFSrecursive(start, end, limit);
+//    }
+    //DFSrecursive(start, end, startDepth);
+    //DFSrecursive(start, end, startDepth+1);
+
+    while (true) {
+        clearVisited();
+        if (DFSrecursive(start, end, startDepth++)) {
+            return;
+        }
+    }
+}
+
+bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int depth) {
     visited[convertToOrder(start)] = true; // 현재 vertex 방문 처리
-    cout << start <<  " ";
+    cout << "Expand: " << start << endl;
+
+    if (start.compare(end) == 0) {
+        //cout << "before return" << endl;
+        return true;
+    }
+
+    if (depth <= 0) {
+        //cout << "before return1" << endl;
+        return false;
+    }
 
     vector<Node*> adjInfo = adjList.at(convertToOrder(start));
     for (int i = 1; i < adjInfo.size(); i++) {
         if (visited[convertToOrder(adjInfo.at(i)->getName())] == false) {
-            DFSrecursive(adjInfo.at(i)->getName());
+            if (DFSrecursive(adjInfo.at(i)->getName(), end, depth-1) == true) {
+                //cout << "before return2" << endl;
+                return true;
+            }
         }
     }
+    //cout << "before return3" << endl;
+    return false;
+}
+
+bool IterativeDeepeningSearch::DLS(string start, string end, int limit) {
+    if (start.compare(end) == 0) {
+        return true;
+    }
+
+    if (limit <= 0) {
+        return false;
+    }
+
+    vector<Node*> lst = adjList.at(convertToOrder(start));
+    for (int i = 0; i < lst.size(); i++) {
+        if (DLS(lst.at(i)->getName(), end, limit)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool IterativeDeepeningSearch::IDDLS(string start, string end, int initialDepth, int maxDepth) {
+    for (int depth = initialDepth; depth <= maxDepth; depth++) {
+        if (DLS(start, end, depth) == true) {
+            return true;
+        }
+    }
+    return false;
 }

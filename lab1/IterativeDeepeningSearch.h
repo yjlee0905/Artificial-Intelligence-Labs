@@ -13,8 +13,19 @@ private:
 
 public:
     void initVisited();
-    void DFS(string start);
-    void DFSrecursive(string start);
+    void clearVisited();
+    void DFS(string start, string end, int startDepth);
+    bool DFSrecursive(string start, string end, int depth);
+
+
+    // IDDFS
+    bool DLS(string start, string end, int limit);
+    bool IDDLS(string start, string end, int initialDepth, int maxDepth);
+
+    // new way
+    void iterativeDeepeningDFS(string start, string end);
+
+
 };
 
 #endif //AI_LABS_ITERATIVEDEEPENINGSEARCH_H
