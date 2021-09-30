@@ -26,9 +26,11 @@ vector<string> IterativeDeepeningSearch::runAlgorithm(string start, string end, 
 
     initVisited();
 
+    startDepth = startDepth - 1;
+
     while (true) {
         clearVisited();
-        if (DFSrecursive(start, end, startDepth, startDepth++, resPath)) {
+        if (DFSrecursive(start, end, startDepth, ++startDepth, resPath)) {
             return empty;
         }
     }

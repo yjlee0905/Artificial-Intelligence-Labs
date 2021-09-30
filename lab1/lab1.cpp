@@ -15,7 +15,7 @@ vector<string> split(string target, string delim);
 vector<Node*> parsedVertices;
 vector<pair<string, string>> parsedEdges;
 
-BFS g;
+Graph* g;
 
 int main(int argc, char* argv[]) {
     int c;
@@ -31,18 +31,14 @@ int main(int argc, char* argv[]) {
                 sscanf(optarg, "%c", &algorithm);
                 break;
             case 's':
-                //sscanf(optarg, "%s", startNode);
                 for(; *optarg != '\0'; optarg++) {
                     startNode += *optarg;
                 }
-                cout << startNode << endl;
                 break;
             case 'e':
-                //sscanf(optarg, "%s", endNode);
                 for(; *optarg != '\0'; optarg++) {
                     endNode += *optarg;
                 }
-                cout << endNode << endl;
                 break;
             case 'v':
                 isV = true;
@@ -56,48 +52,35 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    switch (algorithm) {
+        case 'B':
+            g = new BFS();
+            break;
+        case 'I':
+            g = new IterativeDeepeningSearch();
+            break;
+        case 'A':
+            g = new Astar();
+            break;
+    }
+
     string fileName = argv[optind];
 
     // Read file and save vertices, edges
     //readFileAndInit("/Users/yjeonlee/Desktop/[Fall2021]AI/AI_Labs/lab1/inputs/ex2.txt");
     readFileAndInit(fileName);
 
-    switch (algorithm) {
-        case 'B':
-
-            break;
-        case 'I':
-//            IterativeDeepeningSearch idsAlgo;
-//            idsAlgo.IDS(startNode, endNode, initialDepth);
-            break;
-        case 'A':
-//            Astar astarAlo;
-//            vector<string> finalPath = astarAlo.AstarAlgo(startNode, endNode);
-//            cout << "Solution:";
-//            for (int i = 0; i < finalPath.size(); i++) {
-//                if (i == finalPath.size()-1) {
-//                    cout << " " << finalPath.at(i);
-//                } else {
-//                    cout << " " << finalPath.at(i) << " ->";
-//                }
-//            }
-            break;
+    vector<string> finalPath = g->runAlgorithm(startNode, endNode, initialDepth);
+    if (finalPath.size() > 0) {
+        cout << "Solution:";
+        for (int i = 0; i < finalPath.size(); i++) {
+            if (i == finalPath.size()-1) {
+                cout << " " << finalPath.at(i);
+            } else {
+                cout << " " << finalPath.at(i) << " ->";
+            }
+        }
     }
-
-//    cout << "BFS" << endl;
-//    vector<string> res = g.BFSalgo("S", "G");
-//    cout << "Solution:";
-//    for (int i = 0; i < res.size(); i++) {
-//        if (i == res.size()-1) {
-//            cout << " " << res.at(i);
-//        } else {
-//            cout << " " << res.at(i) << " ->";
-//        }
-//    }
-
-
-//    cout << "IDS" << endl;
-//    g.IDS("S", "G", 2);
 
     return 0;
 }
@@ -135,14 +118,14 @@ void readFileAndInit(string filename) {
 
     // Insert Vertices
     for (int i=0; i < parsedVertices.size(); i++) {
-        g.insertVertex(parsedVertices.at(i)->getName(), parsedVertices.at(i)->getXpos(), parsedVertices.at(i)->getYpos());
+        g->insertVertex(parsedVertices.at(i)->getName(), parsedVertices.at(i)->getXpos(), parsedVertices.at(i)->getYpos());
     }
 
     // Insert Edges;
-    g.createAdjList(parsedVertices);
+    g->createAdjList(parsedVertices);
 
     for (int i = 0; i < parsedEdges.size(); ++i) {
-        g.insertEdge(parsedEdges.at(i).first, parsedEdges.at(i).second);
+        g->insertEdge(parsedEdges.at(i).first, parsedEdges.at(i).second);
     }
 }
 

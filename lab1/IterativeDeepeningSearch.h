@@ -14,10 +14,9 @@ private:
 
     void initVisited();
     void clearVisited();
-    bool DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path);
 
 public:
-
+    bool DFSrecursive(string start, string end, int curDepth, int depth, stack<string> path);
     vector<string> runAlgorithm(string start, string end, int startDepth);
 };
 
