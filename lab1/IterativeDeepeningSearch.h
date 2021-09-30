@@ -15,7 +15,7 @@ public:
     void initVisited();
     void clearVisited();
     void DFS(string start, string end, int startDepth);
-    bool DFSrecursive(string start, string end, int depth);
+    bool DFSrecursive(string start, string end, int curDepth, int depth);
 
 
     // IDDFS

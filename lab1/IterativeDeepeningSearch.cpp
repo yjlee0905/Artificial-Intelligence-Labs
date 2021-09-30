@@ -30,36 +30,34 @@ void IterativeDeepeningSearch::DFS(string start, string end, int startDepth) {
 
     while (true) {
         clearVisited();
-        if (DFSrecursive(start, end, startDepth++)) {
+        if (DFSrecursive(start, end, startDepth, startDepth++)) {
             return;
         }
     }
 }
 
-bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int depth) {
+bool IterativeDeepeningSearch::DFSrecursive(string start, string end, int curDepth, int depth) {
     visited[convertToOrder(start)] = true; // 현재 vertex 방문 처리
-    cout << "Expand: " << start << endl;
 
     if (start.compare(end) == 0) {
-        //cout << "before return" << endl;
         return true;
     }
 
-    if (depth <= 0) {
-        //cout << "before return1" << endl;
+    if (curDepth <= 0) {
+        cout << "hit depth=" << depth << ": " << start << endl;
         return false;
     }
+
+    cout << "Expand: " << start << endl;
 
     vector<Node*> adjInfo = adjList.at(convertToOrder(start));
     for (int i = 1; i < adjInfo.size(); i++) {
         if (visited[convertToOrder(adjInfo.at(i)->getName())] == false) {
-            if (DFSrecursive(adjInfo.at(i)->getName(), end, depth-1) == true) {
-                //cout << "before return2" << endl;
+            if (DFSrecursive(adjInfo.at(i)->getName(), end, curDepth-1, depth) == true) {
                 return true;
             }
         }
     }
-    //cout << "before return3" << endl;
     return false;
 }
 
