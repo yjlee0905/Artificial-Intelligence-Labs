@@ -72,6 +72,11 @@ void Graph::insertEdge(string start, string end) {
     int startOrder = convertToOrder(start);
     int endOrder = convertToOrder(end);
 
+    if (startOrder == -1 || endOrder == -1) {
+        cout << "Edge referencing a vertex not in the file" << endl;
+        exit(1);
+    }
+
     // insert to start adjList
     int targetIdx = -1;
     for (int i=1; i<adjList[startOrder].size(); i++) {
