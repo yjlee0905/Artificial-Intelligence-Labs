@@ -7,7 +7,7 @@
 using namespace std;
 
 int main() {
-    cout << "start lab2" << endl;
+    cout << "start lab2 test" << endl;
     return 0;
 }
 
