@@ -8,41 +8,38 @@
 
 using namespace std;
 
-// TODO check max vertices
-const int MAX_VERTICES = 1024;
-
 class Node {
 private:
-    string name; // TODO check name is char or string
-    // int order;
+    string name;
     int xPos;
     int yPos;
-    Node* link;
 
 public:
-    Node(string name, Node* link);
-    //Node(char name, int xPos, int yPos, Node* link);
-    void setLink(Node* link);
-    Node* getLink();
+    Node(string name, int xPos, int yPos);
     string getName();
+    int getXpos();
+    int getYpos();
 };
 
 class Graph {
 private:
-    int size; // 정점의 개수
-    vector<string> vertices; // 정점의 이름
-    Node* adjList[MAX_VERTICES]; // 인접 리스트
-
-    void insertInLinkedList(Node* head, Node* newNode);
+    int size; // number of vertices
 
 public:
+    vector<Node*> vertices;
+    vector<vector<Node*>> adjList;
+
     Graph();
+    int getVerticesSize();
     int convertToOrder(string name);
-    void insertVertex(string name);
-    string getVertex(int idx);
-    void insertEdge(string u, string v);
-    Node* getAdjListNode(int idx);
+    void insertVertex(string name, int xPos, int yPos);
+    string getVertexName(int idx);
+    void insertEdge(string start, string end);
+    void createAdjList(vector<Node*> parsed);
     void display();
+
+    // for the algorithms
+    virtual vector<string> runAlgorithm(string start, string end, int startDepth, bool isVerbose) = 0;
 };
 
 #endif //AI_LABS_GRAPH_H
