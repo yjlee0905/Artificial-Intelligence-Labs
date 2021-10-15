@@ -30,6 +30,8 @@ int main() {
     cout << test1.size() << endl;
     cout << test2.size() << endl;
 
+    solver->runDPLLalgorithm(test1, test2);
+
     in.close();
     return 0;
 }

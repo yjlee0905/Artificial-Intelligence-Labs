@@ -3,6 +3,7 @@
 //
 
 #include "DPLLsolver.h"
+#include "Constants.h"
 
 using namespace std;
 
@@ -50,4 +51,53 @@ vector<string> DPLLsolver::parseAtoms(vector<vector<string>> sentences) {
 
     vector<string> distinctAtoms{atoms.begin(), atoms.end()};
     return distinctAtoms;
+}
+
+bool DPLLsolver::runDPLLalgorithm(vector<vector<string>> parsed, vector<string> atoms) {
+    // init atom states
+    vector<pair<string, string>> atomStates;
+    for (int i = 0; i < atoms.size(); i++) {
+        pair<string, string> atomState;
+        atomState.first = atoms.at(i);
+        atomState.second = UNBOUNDED;
+    }
+
+    map<string, int> pure = findPureLiterals(parsed, atoms);
+    // cout << pure.size() << endl;
+}
+
+map<string, int> DPLLsolver::findPureLiterals(vector<vector<string>> parsed, vector<string> atoms) {
+    map<string, int> marks;
+    for (int i = 0; i < atoms.size(); i++) {
+        marks.insert({atoms.at(i), 0});
+    }
+
+    for (int i = 0; i < parsed.size(); i++) {
+        for (int j = 0; j < parsed.at(i).size(); j++) {
+            string atom = parsed.at(i).at(j);
+
+            if (atom.find('!') == 0) {
+                atom = atom.substr(1, atom.size()-1);
+                set<string> keys = getKeysFromMap(marks);
+                if (keys.find(atom) != keys.end()
+                    && marks.find(atom)->second == 0) {
+                    marks.at(atom) = -1;
+                } else if ( keys.find(atom) != keys.end()
+                        && marks.find(atom)->second == 1) {
+                    marks.erase(atom);
+                }
+            } else {
+                set<string> keys = getKeysFromMap(marks);
+                if (keys.find(atom) != keys.end()
+                    && marks.find(atom)->second == 0) {
+                    marks.at(atom) = 1;
+                } else if ( keys.find(atom) != keys.end()
+                            && marks.find(atom)->second == -1) {
+                    marks.erase(atom);
+                }
+            }
+        }
+    }
+    // TODO check 0
+    return marks;
 }
