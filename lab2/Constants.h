@@ -7,6 +7,13 @@
 
 const string UNBOUNDED = "UNBOUNDED";
 
+const string TRUE = "TRUE";
+const string FALSE = "FALSE";
+
+const string RESULT = "RESULT";
+const string SUCCESS = "SUCCESS";
+const string FAILURE = "FAILURE";
+
 inline const set<string> getKeysFromMap (map<string, int> target) {
     set<string> keys;
     for (auto key : target) {

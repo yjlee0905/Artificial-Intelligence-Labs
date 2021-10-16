@@ -17,13 +17,17 @@ using namespace std;
 class DPLLsolver {
 private:
     vector<string> split(string target);
+    bool checkIsFailure(vector<vector<string>> parsed);
     map<string, int> findPureLiterals(vector<vector<string>> parsed, vector<string> atoms);
+    void easyCaseSingle(map<string, string> result, vector<vector<string>> oneAtoms);
+    vector<vector<string>> propagate(map<string, string> result, vector<vector<string>> parsed);
+
 
 
 public:
     vector<vector<string>> parseSentences(vector<string> lines);
     vector<string> parseAtoms(vector<vector<string>> sentences);
-    bool runDPLLalgorithm(vector<vector<string>> parsed, vector<string> atoms);
+    map<string, string> runDPLLalgorithm(vector<vector<string>> parsed, vector<string> atoms);
 
 };
 
