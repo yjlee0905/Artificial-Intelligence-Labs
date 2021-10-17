@@ -16,33 +16,51 @@ class DPLLsolver:
     def runDPLL(self, sentences, atoms):
         result = {}
         for i in range(0, len(atoms)):
-            result[atoms[i]] = Constant.UNSURE
+            result[atoms[i]] = Constant.UNBOUNDED
+        self.dpll(sentences, atoms, result)
         # TODO return dpll
 
     def dpll(self, sentences, atoms, result):
-        #check
-        pure = self.findPureLiterals(sentences, atoms)
+        # sentences: whole sentences, when assign delete for sentences
 
+        assigned = result
+        #check
+        pureLiterals = self.findPureLiterals(sentences, atoms)
+
+        # check single atom
         # simple
-        oneAtomSentence = []
+        oneAtomSentences = []
         for sentence in sentences:
             if len(sentence) == 1:
-                oneAtomSentence.append(sentence)
+                oneAtomSentences.append(sentence)
 
-        isOneAtomSentenceExist = True if len(oneAtomSentence) > 0 else False
-        isSuccess = True if len(sentences) > 0 else False
-        isFailure = False
+        isOneAtomSentenceExist = True if len(oneAtomSentences) > 0 else False
+        isSuccess = True if len(sentences) == 0 else False
+        isFailure = True
         for i in range(0, len(sentences)):
             if len(sentences[i]) != 0:
-                isFailure = True
+                isFailure = False
                 break
 
-        while isOneAtomSentenceExist or isSuccess or isFailure or len(pure) != 0:
+        while isOneAtomSentenceExist or isSuccess or isFailure or len(pureLiterals) != 0:
             if isSuccess:
                 for atom in atoms:
+                    if assigned[atom] == Constant.UNBOUNDED:
+                        assigned[atom] = Constant.FALSE
+                assigned[Constant.RESULT] = Constant.SUCCESS
+                return assigned
+            elif isFailure:
+                assigned[Constant.RESULT] = Constant.FAILURE
+                return assigned
+            else:
+                if isOneAtomSentenceExist:
+                    # TODO implement
+                    self.processEasyCaseSingle(assigned, oneAtomSentences)
+                    print(assigned)
+                elif len(pureLiterals) != 0:
+                    self.processEasyCase(assigned, pureLiterals)
+                    print(assigned)
 
-
-            print(":")
 
 
 
@@ -50,67 +68,55 @@ class DPLLsolver:
     def findPureLiterals(self, sentences, atoms):
         marks = {}
         for atom in atoms:
-            marks[atom] = 0
+            marks[atom] = Constant.INIT
 
         for i in range(0, len(sentences)):
             for j in range(0, len(sentences[i])):
                 atom = sentences[i][j]
 
                 if atom[0] == '!':
-                    atom = atom[1:len(atom)-1]
-                    if atom in marks and marks[atom] == 0:
-                        marks[atom] = -1
-                    elif atom in marks and marks[atom] == 1:
-                        del marks[atom]
+                    atom = atom[1:]
+                    if marks[atom] != Constant.CHECKED and marks[atom] == Constant.INIT:
+                        marks[atom] = Constant.NEGATE
+                    elif marks[atom] != Constant.CHECKED and marks[atom] == Constant.POSITIVE:
+                        marks[atom] = Constant.CHECKED
                 else:
-                    if atom in marks and marks[atom] == 0:
-                        marks[atom] = 1
-                    elif atom in marks and marks[atom] == -1:
-                        del marks[atom]
+                    if marks[atom] != Constant.CHECKED and marks[atom] == Constant.INIT:
+                        marks[atom] = Constant.POSITIVE
+                    elif marks[atom] != Constant.CHECKED and marks[atom] == Constant.NEGATE:
+                        marks[atom] = Constant.CHECKED
 
-        pure = []
+        pure = {}
         for key in marks:
-            if marks[key] == 0:
-                pure.append(key)
+            if marks[key] == Constant.POSITIVE or marks[key] == Constant.NEGATE:
+                pure[key] = marks[key]
 
         return pure
 
-    def processEasyCaseSingle(self, result, oneAtoms):
-        sortedAtoms = list(oneAtoms.keys())
+    def processEasyCase(self, result, oneAtoms):
+        sortedAtoms = sorted(list(oneAtoms.keys()))
         key = sortedAtoms[0]
-        if oneAtoms[key] == -1:
-            if result[key] == Constant.UNSURE:
+        if oneAtoms[key] == Constant.NEGATE:
+            if result[key] == Constant.UNBOUNDED:
                 result[key] = Constant.FALSE
-        else:
-            if result[key] == Constant.UNSURE:
+        elif oneAtoms[key] == Constant.POSITIVE:
+            if result[key] == Constant.UNBOUNDED:
                 result[key] = Constant.TRUE
         # TODO return check
 
-    def processEasyCase(self, result, singleStateAtoms):
+    def processEasyCaseSingle(self, result, singleStateAtoms):
         for i in range(0, len(singleStateAtoms)):
             if singleStateAtoms[i][0][0] == '!':
                 atom = singleStateAtoms[i][0]
-                if result[atom[1:]] == Constant.UNSURE:
+                if result[atom[1:]] == Constant.INIT:
                     result[atom[1:]] = Constant.FALSE
             else:
-                if result[atom] == Constant.UNSURE:
+                if result[atom] == Constant.INIT:
                     result[atom] = Constant.TRUE
         # TODO return check
 
-    # assign 한거 삭제
+    # delete assigned
     def deleteAssigned(self, sentences, curAssigned):
         keys = list(curAssigned.keys())
-
-
-
-
-
-
-
-
-
-
-
-
 
 
