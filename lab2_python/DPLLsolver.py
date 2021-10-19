@@ -82,6 +82,7 @@ class DPLLsolver:
         remaining = sorted(remaining)
         e = remaining[0]
         assign[e] = Constant.TRUE
+        print('hard case, guess: ', e, '=true')
 
         # map
         result = {}
@@ -129,21 +130,25 @@ class DPLLsolver:
         if oneAtoms[key] == Constant.NEGATE:
             if result[key] == Constant.UNBOUNDED:
                 result[key] = Constant.FALSE
+                print('easyCase ', key, ' = false')
         elif oneAtoms[key] == Constant.POSITIVE:
             if result[key] == Constant.UNBOUNDED:
                 result[key] = Constant.TRUE
+                print('easyCase ', key, ' = true')
         # TODO return check
 
     def processEasyCaseSingle(self, result, singleStateAtoms):
+        print("in")
         for i in range(0, len(singleStateAtoms)):
             atom = singleStateAtoms[i][0]
             if atom[0] == '!':
-                if result[atom[1:]] == Constant.INIT:
+                if result[atom[1:]] == Constant.UNBOUNDED:
                     result[atom[1:]] = Constant.FALSE
+                    print('easyCase ', atom[1:], ' = false')
             else:
-                #print("here")
-                if result[atom] == Constant.INIT:
+                if result[atom] == Constant.UNBOUNDED:
                     result[atom] = Constant.TRUE
+                    print('easyCase ', atom, ' = true')
         # TODO return check
 
     # delete assigned
@@ -161,9 +166,9 @@ class DPLLsolver:
 
         print(sentences)
 
-    def propagate(self, sentences, curAssinged):
-        for atom in curAssinged:
-            if curAssinged[atom] == Constant.TRUE:
+    def propagate(self, sentences, curAssigned):
+        for atom in curAssigned:
+            if curAssigned[atom] == Constant.TRUE:
                 idx = 0
                 while idx < len(sentences):
                     if atom in sentences[idx]:
@@ -172,7 +177,7 @@ class DPLLsolver:
                     elif '!'+atom in sentences[idx]:
                         sentences[idx].remove('!'+atom)
                     idx += 1
-            elif curAssinged[atom] == Constant.FALSE:
+            elif curAssigned[atom] == Constant.FALSE:
                 idx = 0
                 while idx < len(sentences):
                     if '!'+atom in sentences[idx]:
