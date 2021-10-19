@@ -60,6 +60,8 @@ class DPLLsolver:
                 elif len(pureLiterals) != 0:
                     self.processEasyCase(assigned, pureLiterals)
                     print(assigned)
+                    self.deleteAssigned(sentences, pureLiterals)
+                    print(sentences)
 
 
 
@@ -117,6 +119,15 @@ class DPLLsolver:
 
     # delete assigned
     def deleteAssigned(self, sentences, curAssigned):
-        keys = list(curAssigned.keys())
+        sortedAtoms = sorted(list(curAssigned.keys()))
+        key = sortedAtoms[0]
+        toBeDeleted = '!'+key if curAssigned[key] == Constant.NEGATE else key
 
+        idx = 0
+        while idx < len(sentences):
+            if toBeDeleted in sentences[idx]:
+                sentences.remove(sentences[idx])
+                idx -= 1
+            idx += 1
 
+        print(sentences)
