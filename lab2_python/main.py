@@ -15,7 +15,7 @@ if __name__ == "__main__":
     d = DPLLsolver()
     a = d.parseAtoms(sentences=parsedSentences)
     print(d.findPureLiterals(sentences=parsedSentences, atoms=a))
-    d.runDPLL(sentences=parsedSentences, atoms=a)
+    print(d.runDPLL(sentences=parsedSentences, atoms=a))
 
 
 

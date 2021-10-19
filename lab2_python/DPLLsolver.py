@@ -1,7 +1,6 @@
 import Constant
 
 class DPLLsolver:
-    # constants
 
     def parseAtoms(self, sentences):
         atoms = set()
@@ -17,55 +16,84 @@ class DPLLsolver:
         result = {}
         for i in range(0, len(atoms)):
             result[atoms[i]] = Constant.UNBOUNDED
-        self.dpll(sentences, atoms, result)
+        return self.dpll(sentences, result, atoms)
         # TODO return dpll
 
-    def dpll(self, sentences, atoms, result):
+    def dpll(self, set, oAssign, atoms):
         # sentences: whole sentences, when assign delete for sentences
 
-        assigned = result
-        #check
-        pureLiterals = self.findPureLiterals(sentences, atoms)
+        assign = oAssign
+        check = self.findPureLiterals(set, atoms)
 
         # check single atom
         # simple
-        oneAtomSentences = []
-        for sentence in sentences:
+        simple = []
+        for sentence in set:
             if len(sentence) == 1:
-                oneAtomSentences.append(sentence)
+                simple.append(sentence)
 
-        isOneAtomSentenceExist = True if len(oneAtomSentences) > 0 else False
-        isSuccess = True if len(sentences) == 0 else False
+        isSimple = True if len(simple) > 0 else False
+        isSuccess = True if len(set) == 0 else False
         isFailure = True
-        for i in range(0, len(sentences)):
-            if len(sentences[i]) != 0:
+        for i in range(0, len(set)):
+            if len(set[i]) != 0:
                 isFailure = False
                 break
 
-        while isOneAtomSentenceExist or isSuccess or isFailure or len(pureLiterals) != 0:
+        while isSimple or isSuccess or isFailure or len(check) != 0:
             if isSuccess:
                 for atom in atoms:
-                    if assigned[atom] == Constant.UNBOUNDED:
-                        assigned[atom] = Constant.FALSE
-                assigned[Constant.RESULT] = Constant.SUCCESS
-                return assigned
+                    if assign[atom] == Constant.UNBOUNDED:
+                        assign[atom] = Constant.FALSE
+                assign[Constant.RESULT] = Constant.SUCCESS
+                return assign
             elif isFailure:
-                assigned[Constant.RESULT] = Constant.FAILURE
-                return assigned
+                assign[Constant.RESULT] = Constant.FAILURE
+                return assign
             else:
-                if isOneAtomSentenceExist:
+                if isSimple:
                     # TODO implement
-                    self.processEasyCaseSingle(assigned, oneAtomSentences)
-                    print(assigned)
-                elif len(pureLiterals) != 0:
-                    self.processEasyCase(assigned, pureLiterals)
-                    print(assigned)
-                    self.deleteAssigned(sentences, pureLiterals)
-                    print(sentences)
+                    self.processEasyCaseSingle(assign, simple)
+                    temp = set
+                    set = self.propagate(temp, assign)
+                    #print(set)
+                elif len(check) != 0:
+                    self.processEasyCase(assign, check)
+                    #print(assign)
+                    self.deleteAssigned(set, check)
+                    #print(set)
 
+                simple = []
+                for sentence in set:
+                    if len(sentence) == 1:
+                        simple.append(sentence)
 
+                isSimple = True if len(simple) > 0 else False
+                isSuccess = True if len(set) == 0 else False
+                isFailure = True
+                for i in range(0, len(set)):
+                    if len(set[i]) != 0:
+                        isFailure = False
+                        break
+                check = self.findPureLiterals(set, atoms)
 
+        # start Guess
+        remaining = filter(lambda atom: assign[atom] == Constant.UNBOUNDED, assign)
+        remaining = sorted(remaining)
+        e = remaining[0]
+        assign[e] = Constant.TRUE
 
+        # map
+        result = {}
+        temp2 = self.propagate(set, assign)
+        result = self.dpll(temp2, assign, atoms)
+        if result[Constant.RESULT] == Constant.SUCCESS:
+            return result
+        del assign[Constant.RESULT]
+        assign[e] = Constant.FALSE
+        temp3 = self.propagate(set, assign)
+        result = self.dpll(temp3, assign, atoms)
+        return result
 
     def findPureLiterals(self, sentences, atoms):
         marks = {}
@@ -108,11 +136,12 @@ class DPLLsolver:
 
     def processEasyCaseSingle(self, result, singleStateAtoms):
         for i in range(0, len(singleStateAtoms)):
-            if singleStateAtoms[i][0][0] == '!':
-                atom = singleStateAtoms[i][0]
+            atom = singleStateAtoms[i][0]
+            if atom[0] == '!':
                 if result[atom[1:]] == Constant.INIT:
                     result[atom[1:]] = Constant.FALSE
             else:
+                #print("here")
                 if result[atom] == Constant.INIT:
                     result[atom] = Constant.TRUE
         # TODO return check
@@ -131,3 +160,25 @@ class DPLLsolver:
             idx += 1
 
         print(sentences)
+
+    def propagate(self, sentences, curAssinged):
+        for atom in curAssinged:
+            if curAssinged[atom] == Constant.TRUE:
+                idx = 0
+                while idx < len(sentences):
+                    if atom in sentences[idx]:
+                        sentences.remove(sentences[idx])
+                        idx -= 1
+                    elif '!'+atom in sentences[idx]:
+                        sentences[idx].remove('!'+atom)
+                    idx += 1
+            elif curAssinged[atom] == Constant.FALSE:
+                idx = 0
+                while idx < len(sentences):
+                    if '!'+atom in sentences[idx]:
+                        sentences.remove(sentences[idx])
+                        idx -= 1
+                    elif atom in sentences[idx]:
+                        sentences[idx].remove(atom)
+                    idx += 1
+        return sentences
