@@ -17,12 +17,11 @@ class DPLLsolver:
         for i in range(0, len(atoms)):
             result[atoms[i]] = Constant.UNBOUNDED
         return self.dpll(sentences, result, atoms)
-        # TODO return dpll
 
     def dpll(self, set, oAssign, atoms):
         # sentences: whole sentences, when assign delete for sentences
 
-        assign = oAssign
+        assign = oAssign.copy()
         check = self.findPureLiterals(set, atoms)
 
         # check single atom
@@ -54,12 +53,14 @@ class DPLLsolver:
                 if isSimple:
                     # TODO implement
                     self.processEasyCaseSingle(assign, simple)
-                    temp = set
-                    set = self.propagate(temp, assign)
+                    #temp = set
+
+                    set = self.propagate(set, assign)
                     #print(set)
                 elif len(check) != 0:
                     self.processEasyCase(assign, check)
                     #print(assign)
+                    # TODO delete from set
                     self.deleteAssigned(set, check)
                     #print(set)
 
@@ -67,6 +68,7 @@ class DPLLsolver:
                 for sentence in set:
                     if len(sentence) == 1:
                         simple.append(sentence)
+                #TODO ordering?
 
                 isSimple = True if len(simple) > 0 else False
                 isSuccess = True if len(set) == 0 else False
@@ -80,20 +82,27 @@ class DPLLsolver:
         # start Guess
         remaining = filter(lambda atom: assign[atom] == Constant.UNBOUNDED, assign)
         remaining = sorted(remaining)
+        result = {}
         e = remaining[0]
         assign[e] = Constant.TRUE
-        print('hard case, guess: ', e, '=true')
+        print "hard case, guess: " + e + "=true"
 
         # map
-        result = {}
-        temp2 = self.propagate(set, assign)
-        result = self.dpll(temp2, assign, atoms)
+        # TODO delete from set
+
+        tempSet = []
+        for a in set:
+            tempSet.append(a)
+
+        tempSet = self.propagate(tempSet, assign)
+        result = self.dpll(tempSet, assign, atoms)
         if result[Constant.RESULT] == Constant.SUCCESS:
             return result
-        del assign[Constant.RESULT]
         assign[e] = Constant.FALSE
-        temp3 = self.propagate(set, assign)
-        result = self.dpll(temp3, assign, atoms)
+        print "hard case, guess: " + e + "=false"
+
+        tempSet = self.propagate(set, assign)
+        result = self.dpll(tempSet, assign, atoms)
         return result
 
     def findPureLiterals(self, sentences, atoms):
@@ -130,25 +139,25 @@ class DPLLsolver:
         if oneAtoms[key] == Constant.NEGATE:
             if result[key] == Constant.UNBOUNDED:
                 result[key] = Constant.FALSE
-                print('easyCase ', key, ' = false')
+                print "easyCase " + key + " = false"
         elif oneAtoms[key] == Constant.POSITIVE:
             if result[key] == Constant.UNBOUNDED:
                 result[key] = Constant.TRUE
-                print('easyCase ', key, ' = true')
+                print "easyCase " + key + " = true"
         # TODO return check
 
     def processEasyCaseSingle(self, result, singleStateAtoms):
-        print("in")
+        # TODO make in order
         for i in range(0, len(singleStateAtoms)):
             atom = singleStateAtoms[i][0]
             if atom[0] == '!':
                 if result[atom[1:]] == Constant.UNBOUNDED:
                     result[atom[1:]] = Constant.FALSE
-                    print('easyCase ', atom[1:], ' = false')
+                    print "easyCase " + atom[1:] + " = false"
             else:
                 if result[atom] == Constant.UNBOUNDED:
                     result[atom] = Constant.TRUE
-                    print('easyCase ', atom, ' = true')
+                    print "easyCase " + atom + " = true"
         # TODO return check
 
     # delete assigned
@@ -186,4 +195,9 @@ class DPLLsolver:
                     elif atom in sentences[idx]:
                         sentences[idx].remove(atom)
                     idx += 1
+        # Verbose
+        for sentence in sentences:
+            print sentence
+            # for atom in sentence:
+            #     print(atom)
         return sentences
