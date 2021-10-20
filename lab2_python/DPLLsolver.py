@@ -1,4 +1,5 @@
 import Constant
+import copy
 
 class DPLLsolver:
 
@@ -12,13 +13,13 @@ class DPLLsolver:
                 atoms.add(atom)
         return list(atoms)
 
-    def runDPLL(self, sentences, atoms):
+    def runDPLL(self, atoms, sentences):
         result = {}
         for i in range(0, len(atoms)):
             result[atoms[i]] = Constant.UNBOUNDED
-        return self.dpll(sentences, result, atoms)
+        return self.dpll(atoms, sentences, result)
 
-    def dpll(self, set, oAssign, atoms):
+    def dpll(self, atoms, set, oAssign):
         # sentences: whole sentences, when assign delete for sentences
 
         assign = oAssign.copy()
@@ -53,14 +54,17 @@ class DPLLsolver:
                 if isSimple:
                     # TODO implement
                     self.processEasyCaseSingle(assign, simple)
-                    #temp = set
+                    #temp = copy.deepcopy(set)
 
-                    set = self.propagate(set, assign)
-                    #print(set)
+                    self.propagate(set, assign)
+                    print(set)
                 elif len(check) != 0:
                     self.processEasyCase(assign, check)
                     #print(assign)
                     # TODO delete from set
+                    # temp = []
+                    # for a in set:
+                    #     temp.append(a)
                     self.deleteAssigned(set, check)
                     #print(set)
 
@@ -90,19 +94,17 @@ class DPLLsolver:
         # map
         # TODO delete from set
 
-        tempSet = []
-        for a in set:
-            tempSet.append(a)
+        tempSet = copy.deepcopy(set)
 
         tempSet = self.propagate(tempSet, assign)
-        result = self.dpll(tempSet, assign, atoms)
+        result = self.dpll(atoms, tempSet, assign)
         if result[Constant.RESULT] == Constant.SUCCESS:
             return result
         assign[e] = Constant.FALSE
         print "hard case, guess: " + e + "=false"
 
         tempSet = self.propagate(set, assign)
-        result = self.dpll(tempSet, assign, atoms)
+        result = self.dpll(atoms, tempSet, assign)
         return result
 
     def findPureLiterals(self, sentences, atoms):

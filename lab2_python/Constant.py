@@ -10,3 +10,6 @@ NEGATE = 'NEGATE'
 RESULT = 'RESULT'
 SUCCESS = 'SUCCESS'
 FAILURE = 'FAILURE'
+
+OPERATORS = ["<=>", "=>", "&", "|"]
+#DELIMITER = '<=> => & |'
