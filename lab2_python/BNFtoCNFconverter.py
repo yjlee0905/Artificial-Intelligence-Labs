@@ -7,20 +7,16 @@ class Binary:
         self.op = op
         self.right = token2
 
-    # def printTree(self):
-    #     if self.left:
-    #         self.left.printTree()
-    #     print self.op
-    #     if self.right:
-    #         self.right.printTree()
-    #
-    # def inorderTraversal(self, root):
-    #     res = []
-    #     if root:
-    #         print root.left
-    #         res.append(root.op)
-    #         res = res + self.inorderTraversal(root.right)
-    #     return res
+    def inorderTraversal(self, root, answer):
+        if isinstance(root, Binary) is False:
+            print root
+            answer.append(root)
+            return
+
+        self.inorderTraversal(root.left, answer)
+        answer.append(root.op)
+        self.inorderTraversal(root.right, answer)
+        return
 
 
 
