@@ -23,7 +23,7 @@ class DPLLsolver:
         assign = assigned.copy()
         pureLiterals = self.findPureLiterals(atoms, sentences)
 
-        # check single atom
+        # check single atoms
         singleAtoms = []
         for sentence in sentences:
             if len(sentence) == 1:
@@ -85,7 +85,7 @@ class DPLLsolver:
             return result
 
         assign[guess] = Constant.FALSE
-        print "hard case, guess: " + guess + "=false"
+        print "fail|hard case, try: " + guess + "=false"
         tempSentences = self.propagate(sentences, assign)
         result = self.dpll(atoms, tempSentences, assign)
         return result
