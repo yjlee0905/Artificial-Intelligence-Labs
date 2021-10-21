@@ -60,23 +60,23 @@ if __name__ == "__main__":
     parser.add_argument('-file', type=str)
 
     args = parser.parse_args()
-    mode = 'solver'
+    mode = 'dpll'
     fileName = args.file
     isVerbose = args.v
 
     if mode == 'dpll':
         # DPLL solver
-        dpllFileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
+        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
 
         parsedSentences = []
-        sentences = open(dpllFileName, 'r').read().split('\n')
+        sentences = open(fileName, 'r').read().split('\n')
         for sentence in sentences:
             parsed = sentence.split(' ')
             parsedSentences.append(parsed)
 
         dpllSolver = DPLLsolver()
         atoms = dpllSolver.parseAtoms(sentences=parsedSentences)
-        result = dpllSolver.runDPLL(atoms, parsedSentences)
+        result = dpllSolver.runDPLL(atoms, parsedSentences, isVerbose)
 
         if result[Constant.RESULT] == Constant.FAILURE:
             print "NO VALID ASSIGNMENT"
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     elif mode == 'cnf':
         # BNF to CNF converter
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
+        #fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
         parser = Parser()
         sentences = parser.parseAndFormatSentences(fileName)
 
@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
     elif mode == 'solver':
 
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
+        #fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
         parser = Parser()
         sentences = parser.parseAndFormatSentences(fileName)
 
@@ -109,7 +109,7 @@ if __name__ == "__main__":
 
         dpllSolver = DPLLsolver()
         atoms = dpllSolver.parseAtoms(sentences=inputs)
-        result = dpllSolver.runDPLL(atoms, inputs)
+        result = dpllSolver.runDPLL(atoms, inputs, isVerbose)
 
         if result[Constant.RESULT] == Constant.FAILURE:
             print "NO VALID ASSIGNMENT"

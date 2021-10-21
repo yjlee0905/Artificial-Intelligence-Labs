@@ -13,13 +13,13 @@ class DPLLsolver:
                 atoms.add(atom)
         return list(atoms)
 
-    def runDPLL(self, atoms, sentences):
+    def runDPLL(self, atoms, sentences, isVerbose):
         result = {}
         for i in range(0, len(atoms)):
             result[atoms[i]] = Constant.UNBOUNDED
-        return self.dpll(atoms, sentences, result)
+        return self.dpll(atoms, sentences, result, isVerbose)
 
-    def dpll(self, atoms, sentences, assigned):
+    def dpll(self, atoms, sentences, assigned, isVerbose):
         assign = assigned.copy()
         pureLiterals = self.findPureLiterals(atoms, sentences)
 
@@ -42,7 +42,8 @@ class DPLLsolver:
                 for atom in atoms:
                     if assign[atom] == Constant.UNBOUNDED:
                         assign[atom] = Constant.FALSE
-                        print "unbound " + atom + "=false"
+                        if (isVerbose):
+                            print "unbound " + atom + "=false"
                 assign[Constant.RESULT] = Constant.SUCCESS
                 return assign
             elif isFailure:
@@ -50,11 +51,11 @@ class DPLLsolver:
                 return assign
             else:
                 if isSingleAtoms:
-                    self.processEasyCaseSingle(assign, singleAtoms)
-                    self.propagate(sentences, assign)
+                    self.processEasyCaseSingle(assign, singleAtoms, isVerbose)
+                    self.propagate(sentences, assign, isVerbose)
                 elif len(pureLiterals) != 0:
-                    self.processEasyCase(assign, pureLiterals)
-                    self.deleteAssigned(sentences, pureLiterals)
+                    self.processEasyCase(assign, pureLiterals, isVerbose)
+                    self.deleteAssigned(sentences, pureLiterals, isVerbose)
 
                 singleAtoms = []
                 for sentence in sentences:
@@ -77,17 +78,19 @@ class DPLLsolver:
         guess = remaining[0]
 
         assign[guess] = Constant.TRUE
-        print "hard case, guess: " + guess + "=true"
+        if isVerbose:
+            print "hard case, guess: " + guess + "=true"
         tempSentences = copy.deepcopy(sentences)
-        tempSentences = self.propagate(tempSentences, assign)
-        result = self.dpll(atoms, tempSentences, assign)
+        tempSentences = self.propagate(tempSentences, assign, isVerbose)
+        result = self.dpll(atoms, tempSentences, assign, isVerbose)
         if result[Constant.RESULT] == Constant.SUCCESS:
             return result
 
         assign[guess] = Constant.FALSE
-        print "fail|hard case, try: " + guess + "=false"
-        tempSentences = self.propagate(sentences, assign)
-        result = self.dpll(atoms, tempSentences, assign)
+        if isVerbose:
+            print "fail|hard case, try: " + guess + "=false"
+        tempSentences = self.propagate(sentences, assign, isVerbose)
+        result = self.dpll(atoms, tempSentences, assign, isVerbose)
         return result
 
     def findPureLiterals(self, atoms, sentences):
@@ -140,32 +143,36 @@ class DPLLsolver:
 
         return pure
 
-    def processEasyCase(self, result, oneAtoms):
+    def processEasyCase(self, result, oneAtoms, isVerbose):
         sortedAtoms = sorted(list(oneAtoms.keys()))
         key = sortedAtoms[0]
         if oneAtoms[key] == Constant.NEGATE:
             if result[key] == Constant.UNBOUNDED:
                 result[key] = Constant.FALSE
-                print "easyCase " + key + " = false"
+                if isVerbose:
+                    print "easyCase " + key + " = false"
         elif oneAtoms[key] == Constant.POSITIVE:
             if result[key] == Constant.UNBOUNDED:
                 result[key] = Constant.TRUE
-                print "easyCase " + key + " = true"
+                if isVerbose:
+                    print "easyCase " + key + " = true"
 
-    def processEasyCaseSingle(self, result, singleStateAtoms):
+    def processEasyCaseSingle(self, result, singleStateAtoms, isVerbose):
         # TODO make in order
         for i in range(0, len(singleStateAtoms)):
             atom = singleStateAtoms[i][0]
             if atom[0] == '!':
                 if result[atom[1:]] == Constant.UNBOUNDED:
                     result[atom[1:]] = Constant.FALSE
-                    print "easyCase " + atom[1:] + " = false"
+                    if isVerbose:
+                        print "easyCase " + atom[1:] + " = false"
             else:
                 if result[atom] == Constant.UNBOUNDED:
                     result[atom] = Constant.TRUE
-                    print "easyCase " + atom + " = true"
+                    if isVerbose:
+                        print "easyCase " + atom + " = true"
 
-    def deleteAssigned(self, sentences, curAssigned):
+    def deleteAssigned(self, sentences, curAssigned, isVerbose):
         sortedAtoms = sorted(list(curAssigned.keys()))
         key = sortedAtoms[0]
         toBeDeleted = '!'+key if curAssigned[key] == Constant.NEGATE else key
@@ -178,12 +185,13 @@ class DPLLsolver:
             idx += 1
 
         # Verbose
-        for sentence in sentences:
-            for atom in sentence:
-                print atom,
-            print
+        if isVerbose:
+            for sentence in sentences:
+                for atom in sentence:
+                    print atom,
+                print
 
-    def propagate(self, sentences, curAssigned):
+    def propagate(self, sentences, curAssigned, isVerbose):
         for atom in curAssigned:
             if curAssigned[atom] == Constant.TRUE:
                 idx = 0
@@ -204,8 +212,9 @@ class DPLLsolver:
                         sentences[idx].remove(atom)
                     idx += 1
         # Verbose
-        for sentence in sentences:
-            for atom in sentence:
-                print atom,
-            print
+        if isVerbose:
+            for sentence in sentences:
+                for atom in sentence:
+                    print atom,
+                print
         return sentences
