@@ -1,7 +1,7 @@
 import Constant
+import argparse
 from Parser import Parser
 from DPLLsolver import DPLLsolver
-#from BNFtoCNFconverter import BNFtoCNFconverter
 from Converter import BNFtoCNFconverter
 
 def printCNF(results):
@@ -32,13 +32,59 @@ def formatResult(line):
 
 if __name__ == "__main__":
 
-    fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
-    parser = Parser()
-    sentences = parser.parseAndFormatSentences(fileName)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-mode', type=str)
+    parser.add_argument('-v', type=bool, default=False)
+    parser.add_argument('-file', type=str)
 
-    for sentence in sentences:
-        converter = BNFtoCNFconverter(sentence)
-        printCNF(converter.runConverter(sentence))
+    args = parser.parse_args()
+    mode = args.mode
+    fileName = args.file
+    isVerbose = args.v
+
+    if mode == 'dpll':
+        # DPLL solver
+        # dpllFileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample3.txt'
+
+        parsedSentences = []
+        sentences = open(fileName, 'r').read().split('\n')
+        for sentence in sentences:
+            parsed = sentence.split(' ')
+            parsedSentences.append(parsed)
+
+        dpllSolver = DPLLsolver()
+        atoms = dpllSolver.parseAtoms(sentences=parsedSentences)
+        result = dpllSolver.runDPLL(atoms, parsedSentences)
+        for key in result:
+            if key is not Constant.RESULT:
+                print key + " = " + result[key]
+
+    elif mode == 'cnf':
+        # BNF to CNF converter
+        #fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
+        parser = Parser()
+        sentences = parser.parseAndFormatSentences(fileName)
+
+        for sentence in sentences:
+            converter = BNFtoCNFconverter(sentence)
+            printCNF(converter.runConverter(sentence))
+
+
+
+
+
+
+
+
+
+
+        # d = DPLLsolver()
+        # a = d.parseAtoms(sentences=parsedSentences)
+        # print(d.findPureLiterals(sentences=parsedSentences, atoms=a))
+        # result = d.runDPLL(sentences=parsedSentences, atoms=a)
+        # for key in result:
+        #     if key is not Constant.RESULT:
+        #         print key + " = " + result[key]
 
     # for sentence in sentences:
     #     converter = BNFtoCNFconverter(sentence)
@@ -53,17 +99,4 @@ if __name__ == "__main__":
     # for sentence in sentences:
     #     parsed = sentence.split(' ')
     #     parsedSentences.append(parsed)
-
-    # d = DPLLsolver()
-    # a = d.parseAtoms(sentences=parsedSentences)
-    # print(d.findPureLiterals(sentences=parsedSentences, atoms=a))
-    # result = d.runDPLL(sentences=parsedSentences, atoms=a)
-    # for key in result:
-    #     if key is not Constant.RESULT:
-    #         print key + " = " + result[key]
-
-
-
-
-
 

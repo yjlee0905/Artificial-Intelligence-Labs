@@ -156,7 +156,9 @@ class DPLLsolver:
 
         # Verbose
         for sentence in sentences:
-            print sentence
+            for atom in sentence:
+                print atom,
+            print
 
     def propagate(self, sentences, curAssigned):
         for atom in curAssigned:
@@ -180,7 +182,7 @@ class DPLLsolver:
                     idx += 1
         # Verbose
         for sentence in sentences:
-            print sentence
-            # for atom in sentence:
-            #     print(atom)
+            for atom in sentence:
+                print atom,
+            print
         return sentences
