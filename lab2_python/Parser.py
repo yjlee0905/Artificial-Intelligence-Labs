@@ -9,7 +9,7 @@ class Binary:
 
     def inorderTraversal(self, root, result):
         if isinstance(root, Binary) is False:
-            print root
+            #print root
             result.append(root)
             return
 
@@ -44,14 +44,14 @@ class Parser:
     def parse(self, sentence, op):
         if not op:
             sentence = sentence.strip()
-            if sentence[0] == '!':
-                sentence = sentence.replace(' ', '')
+            # if sentence[0] == '!':
+            #     sentence = sentence.replace(' ', '')
             return sentence
 
         idx = sentence.rfind(op[0])
         if idx == -1:
             sentence = sentence.strip()
-            if sentence[0] == '!':
-                sentence = sentence.replace(' ', '')
+            # if sentence[0] == '!':
+            #     sentence = sentence.replace(' ', '')
             return self.parse(sentence, op[1:])
         return Binary(self.parse(sentence[:idx], op), op[0], self.parse(sentence[idx + len(op[0]):], op))

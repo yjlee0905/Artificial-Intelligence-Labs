@@ -95,6 +95,18 @@ class BNFtoCNFconverter:
         threeHalf = BNFtoCNFconverter(three.getResult())
         threeHalf.runSimplify()
 
+        four = BNFtoCNFconverter(threeHalf.getResult())
+        while four.runDistributive():
+            pass
+        merge(four)
+
+        five = BNFtoCNFconverter(four.getResult())
+        five.runSimplify()
+
+        converted = []
+        converted.append(five.getResult())
+
+        return converted
 
 
     # ordering
@@ -219,10 +231,42 @@ class BNFtoCNFconverter:
                 newItems.append(item)
 
         for idx in range(0, len(newItems)-1):
-            if newItems[idx] == '!' and newItems[idx+1] == '!':
-                newItems[idx] = ''
-                newItems[idx+1] = ''
+            if newItems[idx] == '!':
+                if newItems[idx+1] == '!':
+                    newItems[idx] = ''
+                    newItems[idx+1] = ''
         return ' '.join([i for i in newItems if len(i) > 0])
+
+
+    # Distributive
+    def runDistributive(self):
+        flag = False
+        reg = '(\d+)'
+        final = len(self.stack) - 1
+        for i in range(0, len(self.stack)):
+            target = self.stack[i]
+            if '|' not in self.stack[i]:
+                continue
+            m = re.search(reg, target)
+            if m is None:
+                continue
+
+            for j in re.findall(reg, target):
+                child = self.stack[int(j)]
+                if '&' not in child:
+                    continue
+                newReg = "(^|\s)" + j + "(\s|$)"
+                items = re.split('\s+&\s+', child)
+                tmpLst = [str(j) for j in range(len(self.stack), len(self.stack) + len(items))]
+
+                for item in items:
+                    self.stack.append(re.sub(newReg, ' '+item+' ', target).strip())
+                self.stack[i] = ' & '.join(tmpLst)
+                flag = True
+            if flag:
+                break
+        self.stack.append(self.stack[final])
+        return flag
 
 
     # simplification
@@ -240,7 +284,7 @@ class BNFtoCNFconverter:
 
         items = set(re.split('\s+&\s+', target))
         for item in list(items):
-            if '! ' + item in items:
+            if ('! ' + item) in items:
                 return ''
             if re.match('\d+$', item) is None:
                 continue
@@ -259,6 +303,6 @@ class BNFtoCNFconverter:
 
         items = set(re.split('\s+\|\s+', target))
         for item in list(items):
-            if '! '+item in items:
+            if ('! ' + item) in items:
                 return ''
         return ' |'.join(list(items))
