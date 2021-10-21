@@ -35,12 +35,3 @@ class BNFtoCNFconverter:
                 sentence = sentence.replace(' ', '')
             return self.parse(sentence, op[1:])
         return Binary(self.parse(sentence[:idx], op), op[0], self.parse(sentence[idx+len(op[0]):], op))
-
-    # def parseInput(self, fileName):
-    #     lines = open(fileName, 'r').read().split('\n')
-    #
-    #     for line in lines:
-    #         iffOccur = line.find('<=>')
-    #         implyOccur = line.find('=>')
-    #         andOccur = line.find('&')
-    #         orOccur = line.find('|')

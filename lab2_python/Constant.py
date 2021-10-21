@@ -1,5 +1,5 @@
-TRUE = 'TRUE'
-FALSE = 'FALSE'
+TRUE = 'true'
+FALSE = 'false'
 UNBOUNDED = 'UNBOUNDED'
 
 INIT = 'INIT'
