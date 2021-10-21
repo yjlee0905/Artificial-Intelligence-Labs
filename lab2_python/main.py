@@ -17,7 +17,10 @@ def makeInputForDPLL(results):
     return inputs
 
 
-def printCNF(results):
+def printCNF(results, isVerbose):
+    if isVerbose:
+        print "CNF form:"
+
     for result in results:
         line = result.split(' & ')
         for clause in line:
@@ -60,13 +63,13 @@ if __name__ == "__main__":
     parser.add_argument('-file', type=str)
 
     args = parser.parse_args()
-    mode = 'dpll'
+    mode = args.mode
     fileName = args.file
     isVerbose = args.v
 
     if mode == 'dpll':
         # DPLL solver
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
+        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
 
         parsedSentences = []
         sentences = open(fileName, 'r').read().split('\n')
@@ -87,13 +90,14 @@ if __name__ == "__main__":
 
     elif mode == 'cnf':
         # BNF to CNF converter
-        #fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
+        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
         parser = Parser()
         sentences = parser.parseAndFormatSentences(fileName)
 
         for sentence in sentences:
             converter = BNFtoCNFconverter(sentence)
-            printCNF(converter.runConverter(sentence))
+            printCNF(converter.runConverter(sentence, isVerbose), isVerbose)
+            print
 
     elif mode == 'solver':
 
@@ -104,9 +108,12 @@ if __name__ == "__main__":
         inputs = []
         for sentence in sentences:
             converter = BNFtoCNFconverter(sentence)
-            printCNF(converter.runConverter(sentence))
-            inputs += makeInputForDPLL(converter.runConverter(sentence))
+            printCNF(converter.runConverter(sentence, isVerbose), isVerbose)
+            inputs += makeInputForDPLL(converter.runConverter(sentence, isVerbose))
 
+        if isVerbose:
+            print
+            print "Run DPLL algorithm"
         dpllSolver = DPLLsolver()
         atoms = dpllSolver.parseAtoms(sentences=inputs)
         result = dpllSolver.runDPLL(atoms, inputs, isVerbose)

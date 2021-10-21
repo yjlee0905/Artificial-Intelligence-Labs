@@ -72,7 +72,7 @@ class BNFtoCNFconverter:
         if flag:
             self.mergeItems(logic)
 
-    def runConverter(self, sentence):
+    def runConverter(self, sentence, isVerbose):
         # make order
         zero = BNFtoCNFconverter(sentence)
         while zero.makeOrder():
@@ -82,10 +82,16 @@ class BNFtoCNFconverter:
         one = BNFtoCNFconverter(zero.getResult())
         one.runReplaceIff()
         merge(one)
+        if isVerbose:
+            print "step1: Remove <=>"
+            print one.getResult()
 
         two = BNFtoCNFconverter(one.getResult())
         two.runReplaceImplication()
         merge(two)
+        if isVerbose:
+            print "step2: Remove =>"
+            print two.getResult()
 
         three, four = None, None
         three = BNFtoCNFconverter(two.getResult())
@@ -94,11 +100,17 @@ class BNFtoCNFconverter:
         merge(three)
         threeHalf = BNFtoCNFconverter(three.getResult())
         threeHalf.runSimplify()
+        if isVerbose:
+            print "step3: Apply De Morgan's Law"
+            print threeHalf.getResult()
 
         four = BNFtoCNFconverter(threeHalf.getResult())
         while four.runDistributive():
             pass
         merge(four)
+        if isVerbose:
+            print "step4: Apply Distributive Law"
+            print four.getResult()
 
         five = BNFtoCNFconverter(four.getResult())
         five.runSimplify()
