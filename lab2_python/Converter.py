@@ -1,25 +1,6 @@
 import re
 import Constant
 
-class Binary:
-    def __init__(self, token1, op, token2):
-        self.left = token1
-        self.op = op
-        self.right = token2
-
-    def inorderTraversal(self, root, result):
-        if isinstance(root, Binary) is False:
-            print root
-            result.append(root)
-            return
-
-        self.inorderTraversal(root.left, result)
-        result.append(root.op)
-        self.inorderTraversal(root.right, result)
-        return
-
-
-
 def remove_brackets(source, id):
     reg = '\(([^\(]*?)\)'
     m = re.search(reg, source)
@@ -28,6 +9,11 @@ def remove_brackets(source, id):
     new_source = re.sub(reg, str(id), source, count=1)
     return new_source, m.group(1)
 
+def merge(source):
+    old = source.getResult()
+    source.mergeItems('|')
+    source.mergeItems('&')
+    return old != source.getResult()
 
 class BNFtoCNFconverter:
 
@@ -68,7 +54,7 @@ class BNFtoCNFconverter:
                 continue
 
             m = re.search(reg1, target)
-            if m is None:
+            if m is not None:
                 continue
 
             m = re.search(reg0, target)
@@ -86,44 +72,30 @@ class BNFtoCNFconverter:
         if flag:
             self.mergeItems(logic)
 
-    def runConverter(self, fileName):
-        sentences = self.parseAndFormatSentences(fileName)
+    def runConverter(self, sentence):
+        # make order
+        zero = BNFtoCNFconverter(sentence)
+        while zero.makeOrder():
+            zero = BNFtoCNFconverter(zero.getResult())
+        merge(zero)
+
+        one = BNFtoCNFconverter(zero.getResult())
+        one.runReplaceIff()
+        merge(one)
+
+        two = BNFtoCNFconverter(one.getResult())
+        two.runReplaceImplication()
+        merge(two)
+
+        three, four = None, None
+        three = BNFtoCNFconverter(two.getResult())
+        while three.runDeMorgan():
+            pass
+        merge(three)
+        threeHalf = BNFtoCNFconverter(three.getResult())
+        threeHalf.runSimplify()
 
 
-    # parse files
-    def parseAndFormatSentences(self, fileName):
-        sentences = open(fileName, 'r').read().split('\n')
-
-        parsedSentences = []
-        for sentence in sentences:
-            parsed = []
-            parsedStr = ''
-            tree = self.parse(sentence, Constant.OPERATORS)
-            tree.inorderTraversal(tree, parsed)
-
-            for idx in range(0, len(parsed)):
-                if idx == len(parsed)-1:
-                    parsedStr += parsed[idx]
-                else:
-                    parsedStr += parsed[idx] + ' '
-            parsedSentences.append(parsedStr)
-        print parsedSentences
-
-
-    def parse(self, sentence, op):
-        if not op:
-            sentence = sentence.strip()
-            if sentence[0] == '!':
-                sentence = sentence.replace(' ', '')
-            return sentence
-
-        idx = sentence.rfind(op[0])
-        if idx == -1:
-            sentence = sentence.strip()
-            if sentence[0] == '!':
-                sentence = sentence.replace(' ', '')
-            return self.parse(sentence, op[1:])
-        return Binary(self.parse(sentence[:idx], op), op[0], self.parse(sentence[idx+len(op[0]):], op))
 
     # ordering
     def makeOrder(self):
@@ -159,3 +131,134 @@ class BNFtoCNFconverter:
         m = re.search(regIff, source)
         if m is not None:
             return re.sub(regIff, '(' + m.group(0) + ')', source, count=1)
+
+
+    # Replace if and only if
+    def runReplaceIff(self):
+        final = len(self.stack) - 1
+        flag = self.replaceAllIff()
+        self.stack.append(self.stack[final])
+        return flag
+
+
+    def replaceAllIff(self):
+        flag = False
+        for i in range(0, len(self.stack)):
+            ans = self.replaceIffInner(self.stack[i], len(self.stack))
+            if ans is None:
+                continue
+            self.stack[i] = ans[0]
+            self.stack.append(ans[1])
+            self.stack.append(ans[2])
+            flag = True
+        return flag
+
+    def replaceIffInner(self, source, id):
+        reg = '^(.*?)\s+<=>\s+(.*?)$'
+        m = re.search(reg, source)
+        if m is None:
+            return None
+        a, b = m.group(1), m.group(2)
+        return (str(id) + ' & ' + str(id+1), a + ' => ' + b, b + ' => ' + a)
+
+
+    # Replace Implication
+    def runReplaceImplication(self):
+        flag = False
+        for idx in range(0, len(self.stack)):
+            ans = self.replaceImplicationInner(self.stack[idx])
+            if ans is None:
+                continue
+            self.stack[idx] = ans
+            flag = True
+        return flag
+
+
+    def replaceImplicationInner(self, source):
+        reg = '^(.*?)\s+=>\s+(.*?)$'
+        m = re.search(reg, source)
+        if m is None:
+            return None
+        a, b = m.group(1), m.group(2)
+        if '!' in a:
+            return a.replace('! ', '') + ' | ' + b
+        return '! ' + a + ' | ' + b
+
+
+    # Apply De Morgan's Law
+    def runDeMorgan(self):
+        reg = '!\s+(\d+)'
+        flag = False
+        final = len(self.stack) - 1
+        for i in range(0, len(self.stack)):
+            target = self.stack[i]
+            m = re.search(reg, target)
+            if m is None:
+                continue
+            flag = True
+            child = self.stack[int(m.group(1))]
+            self.stack[i] = re.sub(reg, str(len(self.stack)), target, count=1)
+            self.stack.append(self.demorganInner(child))
+            break
+        self.stack.append(self.stack[final])
+        return flag
+
+
+    def demorganInner(self, source):
+        items = re.split('\s+', source)
+        newItems = []
+        for item in items:
+            if item == '|':
+                newItems.append('&')
+            elif item == '&':
+                newItems.append('|')
+            elif item == '!':
+                newItems.append('!')
+            elif len(item.strip()) > 0:
+                newItems.append('!')
+                newItems.append(item)
+
+        for idx in range(0, len(newItems)-1):
+            if newItems[idx] == '!' and newItems[idx+1] == '!':
+                newItems[idx] = ''
+                newItems[idx+1] = ''
+        return ' '.join([i for i in newItems if len(i) > 0])
+
+
+    # simplification
+    def runSimplify(self):
+        old = self.getResult()
+        for i in range(0, len(self.stack)):
+            self.stack[i] = self.reduceOr(self.stack[i])
+        final = self.stack[-1]
+        self.stack[-1] = self.reduceAnd(final)
+        return len(old) != len(self.getResult())
+
+    def reduceAnd(self, target):
+        if '&' not in target:
+            return target
+
+        items = set(re.split('\s+&\s+', target))
+        for item in list(items):
+            if '! ' + item in items:
+                return ''
+            if re.match('\d+$', item) is None:
+                continue
+            value = self.stack[int(item)]
+            if self.stack.count(value) > 1:
+                value = ''
+                self.stack[int(item)] = ''
+            if value == '':
+                items.remove(item)
+        return ' & '.join(list(items))
+
+    def reduceOr(self, target):
+        # TODO check 'or'
+        if 'or' not in target:
+            return target
+
+        items = set(re.split('\s+\|\s+', target))
+        for item in list(items):
+            if '! '+item in items:
+                return ''
+        return ' |'.join(list(items))
