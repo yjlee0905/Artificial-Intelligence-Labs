@@ -17,16 +17,25 @@ def printCNF(results):
 def formatResult(line):
     newLine = ''
     idx = 0
+    isNegate = False
     while idx < len(line):
         if line[idx] == '!':
             newLine += line[idx]
+            isNegate = True
             idx += 1
         elif line[idx] == '|':
             idx += 1
             continue
+        elif isNegate and line[idx] == ' ':
+            idx += 1
+            continue
+        elif isNegate and line[idx] != ' ':
+            isNegate = False
+            newLine += line[idx]
+            idx += 1
         else:
             newLine += line[idx]
-        idx += 1
+            idx += 1
     return newLine
 
 
@@ -38,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument('-file', type=str)
 
     args = parser.parse_args()
-    mode = args.mode
+    mode = 'cnf'
     fileName = args.file
     isVerbose = args.v
 
@@ -61,7 +70,7 @@ if __name__ == "__main__":
 
     elif mode == 'cnf':
         # BNF to CNF converter
-        #fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
+        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
         parser = Parser()
         sentences = parser.parseAndFormatSentences(fileName)
 
