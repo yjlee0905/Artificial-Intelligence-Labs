@@ -111,7 +111,8 @@ if __name__ == "__main__":
             converter = BNFtoCNFconverter(sentence)
             converted =  converter.runConverter(sentence, isVerbose)
             printCNF(converted, isVerbose)
-            print
+            if isVerbose:
+                print
             inputs += makeInputForDPLL(converted)
 
         if isVerbose:
