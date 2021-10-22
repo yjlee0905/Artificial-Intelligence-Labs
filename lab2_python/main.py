@@ -19,7 +19,7 @@ def makeInputForDPLL(results):
 
 def printCNF(results, isVerbose):
     if isVerbose:
-        print "CNF form:"
+        print "step5: Separate top-level conjunctions into separate sentences"
 
     for result in results:
         line = result.split(' & ')
@@ -97,7 +97,8 @@ if __name__ == "__main__":
         for sentence in sentences:
             converter = BNFtoCNFconverter(sentence)
             printCNF(converter.runConverter(sentence, isVerbose), isVerbose)
-            print
+            if isVerbose:
+                print
 
     elif mode == 'solver':
 
@@ -108,8 +109,10 @@ if __name__ == "__main__":
         inputs = []
         for sentence in sentences:
             converter = BNFtoCNFconverter(sentence)
-            printCNF(converter.runConverter(sentence, isVerbose), isVerbose)
-            inputs += makeInputForDPLL(converter.runConverter(sentence, isVerbose))
+            converted =  converter.runConverter(sentence, isVerbose)
+            printCNF(converted, isVerbose)
+            print
+            inputs += makeInputForDPLL(converted)
 
         if isVerbose:
             print

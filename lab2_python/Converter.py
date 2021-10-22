@@ -1,19 +1,21 @@
 import re
 import Constant
 
-def remove_brackets(source, id):
+def removeBrackets(source, id):
     reg = '\(([^\(]*?)\)'
     m = re.search(reg, source)
     if m is None:
         return None, None
-    new_source = re.sub(reg, str(id), source, count=1)
-    return new_source, m.group(1)
+    newSource = re.sub(reg, str(id), source, count=1)
+    return newSource, m.group(1)
 
 def merge(source):
     old = source.getResult()
     source.mergeItems('|')
     source.mergeItems('&')
     return old != source.getResult()
+
+
 
 class BNFtoCNFconverter:
 
@@ -23,7 +25,7 @@ class BNFtoCNFconverter:
 
         final = target
         while True:
-            target, temp = remove_brackets(target, len(self.stack))
+            target, temp = removeBrackets(target, len(self.stack))
             if target is None:
                 break
             final = target
@@ -69,55 +71,59 @@ class BNFtoCNFconverter:
                 self.stack[i] = re.sub(newReg, ' ' + child + ' ', self.stack[i], count=1)
                 self.stack[i] = self.stack[i].strip()
                 flag = True
+
         if flag:
             self.mergeItems(logic)
 
     def runConverter(self, sentence, isVerbose):
         # make order
-        zero = BNFtoCNFconverter(sentence)
-        while zero.makeOrder():
-            zero = BNFtoCNFconverter(zero.getResult())
-        merge(zero)
+        stepZero = BNFtoCNFconverter(sentence)
+        while stepZero.makeOrder():
+            stepZero = BNFtoCNFconverter(stepZero.getResult())
+        merge(stepZero)
 
-        one = BNFtoCNFconverter(zero.getResult())
-        one.runReplaceIff()
-        merge(one)
+        # remove <=>
+        stepOne = BNFtoCNFconverter(stepZero.getResult())
+        stepOne.runReplaceIff()
+        merge(stepOne)
         if isVerbose:
             print "step1: Remove <=>"
-            print one.getResult()
+            print stepOne.getResult()
 
-        two = BNFtoCNFconverter(one.getResult())
-        two.runReplaceImplication()
-        merge(two)
+        # remove =>
+        stepTwo = BNFtoCNFconverter(stepOne.getResult())
+        stepTwo.runReplaceImplication()
+        merge(stepTwo)
         if isVerbose:
             print "step2: Remove =>"
-            print two.getResult()
+            print stepTwo.getResult()
 
-        three, four = None, None
-        three = BNFtoCNFconverter(two.getResult())
-        while three.runDeMorgan():
+        # Apply De Morgan's Law
+        stepThree, stepFour = None, None
+        stepThree = BNFtoCNFconverter(stepTwo.getResult())
+        while stepThree.runDeMorgan():
             pass
-        merge(three)
-        threeHalf = BNFtoCNFconverter(three.getResult())
+        merge(stepThree)
+        threeHalf = BNFtoCNFconverter(stepThree.getResult())
         threeHalf.runSimplify()
         if isVerbose:
             print "step3: Apply De Morgan's Law"
             print threeHalf.getResult()
 
-        four = BNFtoCNFconverter(threeHalf.getResult())
-        while four.runDistributive():
+        # Distribution
+        stepFour = BNFtoCNFconverter(threeHalf.getResult())
+        while stepFour.runDistributive():
             pass
-        merge(four)
+        merge(stepFour)
         if isVerbose:
             print "step4: Apply Distributive Law"
-            print four.getResult()
+            print stepFour.getResult()
 
-        five = BNFtoCNFconverter(four.getResult())
-        five.runSimplify()
+        stepFive = BNFtoCNFconverter(stepFour.getResult())
+        stepFive.runSimplify()
 
         converted = []
-        converted.append(five.getResult())
-
+        converted.append(stepFive.getResult())
         return converted
 
 
@@ -182,8 +188,8 @@ class BNFtoCNFconverter:
         m = re.search(reg, source)
         if m is None:
             return None
-        a, b = m.group(1), m.group(2)
-        return (str(id) + ' & ' + str(id+1), a + ' => ' + b, b + ' => ' + a)
+        left, right = m.group(1), m.group(2)
+        return (str(id) + ' & ' + str(id+1), left + ' => ' + right, right + ' => ' + left)
 
 
     # Replace Implication
@@ -203,10 +209,10 @@ class BNFtoCNFconverter:
         m = re.search(reg, source)
         if m is None:
             return None
-        a, b = m.group(1), m.group(2)
-        if '!' in a:
-            return a.replace('! ', '') + ' | ' + b
-        return '! ' + a + ' | ' + b
+        left, right = m.group(1), m.group(2)
+        if '!' in left:
+            return left.replace('! ', '') + ' | ' + right
+        return '! ' + left + ' | ' + right
 
 
     # Apply De Morgan's Law
