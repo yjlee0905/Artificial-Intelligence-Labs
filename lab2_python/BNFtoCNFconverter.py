@@ -2,9 +2,10 @@ import re
 import Constant
 
 class Binary:
-    def __init__(self, token1, op, token2):
-        self.left = token1
+    def __init__(self, op, sign, token1, token2):
         self.op = op
+        self.sign = sign
+        self.left = token1
         self.right = token2
 
     def inorderTraversal(self, root, answer):
@@ -17,6 +18,11 @@ class Binary:
         answer.append(root.op)
         self.inorderTraversal(root.right, answer)
         return
+
+    def isAtom(self):
+        if self.left is None and self.right is None:
+            return True
+        return False
 
 
 
@@ -34,4 +40,18 @@ class BNFtoCNFconverter:
             if sentence[0] == '!':
                 sentence = sentence.replace(' ', '')
             return self.parse(sentence, op[1:])
-        return Binary(self.parse(sentence[:idx], op), op[0], self.parse(sentence[idx+len(op[0]):], op))
+        return Binary(op[0], False, self.parse(sentence[:idx], op), self.parse(sentence[idx+len(op[0]):], op))
+
+
+    def eliminateIff(self, node):
+        if type(node) == str:
+            return node
+
+        left = self.eliminateIff(node.left)
+        right = self.eliminateIff(node.right)
+
+        if node.op != "<=>":
+            return Binary(node.op, node.sign, left, right)
+
+        return Binary("&", True, Binary("=>", True, left, right), Binary("=>", True, right, left))
+

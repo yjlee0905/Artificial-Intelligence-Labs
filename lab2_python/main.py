@@ -2,7 +2,7 @@ import Constant
 import argparse
 from Parser import Parser
 from DPLLsolver import DPLLsolver
-from Converter import BNFtoCNFconverter
+from BNFtoCNFconverter import BNFtoCNFconverter
 
 def makeInputForDPLL(results):
     inputs = []
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     parser.add_argument('-file', type=str)
 
     args = parser.parse_args()
-    mode = args.mode
+    mode = 'converter'
     fileName = args.file
     isVerbose = args.v
 
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         inputs = []
         for sentence in sentences:
             converter = BNFtoCNFconverter(sentence)
-            converted =  converter.runConverter(sentence, isVerbose)
+            converted = converter.runConverter(sentence, isVerbose)
             printCNF(converted, isVerbose)
             if isVerbose:
                 print
@@ -128,3 +128,16 @@ if __name__ == "__main__":
             for key in result:
                 if key is not Constant.RESULT:
                     print key + " = " + result[key]
+
+    elif mode == 'converter':
+        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
+        parser = Parser()
+        sentences = parser.parseAndFormatSentences(fileName)
+
+        for sentence in sentences:
+            converter = BNFtoCNFconverter()
+            tree = converter.parse(sentence, Constant.OPERATORS)
+            converted = converter.eliminateIff(tree)
+            print converter
+
+
