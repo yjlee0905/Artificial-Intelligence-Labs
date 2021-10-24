@@ -68,12 +68,11 @@ class BNFtoCNFconverter:
 
         # TODO change left sign
         # left = Binary("|", not node.sign, left, right)
-        # if type(node) == str:
-        #     node = '!' + node
-        # else:
-        #     left.sign = not left.sign
-
-        return Binary("|", False, left, right)
+        if type(left) == str:
+            left = '!' + left
+        else:
+            left.sign = not left.sign
+        return Binary("|", node.sign, left, right)
 
 
     def applyDeMorganLaw(self, node):
