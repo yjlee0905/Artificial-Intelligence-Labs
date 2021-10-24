@@ -68,9 +68,11 @@ class BNFtoCNFconverter:
 
         # TODO change left sign
         # left = Binary("|", not node.sign, left, right)
-        if type(left) == str:
-            left = '!' + left
-        else:
+        # if type(left) == str:
+        #     left = '!' + left
+        # else:
+        #     left.sign = not left.sign
+        if type(left) != str:
             left.sign = not left.sign
         return Binary("|", node.sign, left, right)
 
@@ -85,16 +87,28 @@ class BNFtoCNFconverter:
         if node.sign is True:
             return Binary(node.op, node.sign, left, right)
 
-        # if node.op == '&':
-        #     node.op = '|'
-        # elif node.op == '|':
-        #     node.op = '&'
-        #
-        # if type(left) != str:
-        #     left.sign = not left.sign
-        #     #right.sign = not right.sign
+        if node.op == '&':
+            node.op = '|'
+        elif node.op == '|':
+            node.op = '&'
 
-        return Binary("|", node.sign, left, right)
+        if type(left) != str:
+            left.sign = not left.sign
+        else:
+            if left[0] == '!':
+                left = left[1:]
+            else:
+                left = '!' + left
+
+        if type(right) != str:
+            right.sign = not right.sign
+        else:
+            if right[0] == '!':
+                right = right[1:]
+            else:
+                right = '!' + right
+
+        return Binary(node.op, not node.sign, left, right)
 
 
     def negateNodes(self, node):
