@@ -19,10 +19,10 @@ class Binary:
         self.inorderTraversal(root.right, answer)
         return
 
-    def isAtom(self):
-        if self.left is None and self.right is None:
-            return True
-        return False
+    # def isAtom(self):
+    #     if self.left is None and self.right is None:
+    #         return True
+    #     return False
 
 
 
