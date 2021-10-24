@@ -138,6 +138,14 @@ if __name__ == "__main__":
             converter = BNFtoCNFconverter()
             tree = converter.parse(sentence, Constant.OPERATORS)
             converted = converter.eliminateIff(tree)
+            result = []
+            converted.inorderTraversal(converted, result)
+            print result
+            converted = converter.eliminateImplication(converted)
+            result = []
+            converted.inorderTraversal(converted, result)
+            print result
+            converted = converter.applyDeMorganLaw(converted)
             print converter
 
 

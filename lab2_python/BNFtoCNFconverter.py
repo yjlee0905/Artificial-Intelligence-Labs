@@ -10,7 +10,7 @@ class Binary:
 
     def inorderTraversal(self, root, answer):
         if isinstance(root, Binary) is False:
-            print root
+            #print root
             answer.append(root)
             return
 
@@ -55,3 +55,58 @@ class BNFtoCNFconverter:
 
         return Binary("&", True, Binary("=>", True, left, right), Binary("=>", True, right, left))
 
+
+    def eliminateImplication(self, node):
+        if type(node) == str:
+            return node
+
+        left = self.eliminateImplication(node.left)
+        right = self.eliminateImplication(node.right)
+
+        if node.op != "=>":
+            return Binary(node.op, node.sign, left, right)
+
+        # TODO change left sign
+        #left = Binary("|", not node.sign, left, right)
+        if type(left) == str:
+            left = '!'+left
+        else:
+            left.sign = not left.sign
+        return Binary("|", node.sign, left, right)
+
+
+    def applyDeMorganLaw(self, node):
+        if type(node) == str:
+            return node
+
+        left = self.applyDeMorganLaw(node.left)
+        right = self.applyDeMorganLaw(node.right)
+
+        if node.sign is True:
+            return Binary(node.op, node.sign, left, right)
+
+        if node.op == '&':
+            node.op = '|'
+        elif node.op == '|':
+            node.op = '&'
+
+        if type(left) != str:
+            left.sign = not left.sign
+            right.sign = not right.sign
+
+        return Binary("|", node.sign, left, right)
+
+
+    # def eliminateImplication(self, node):
+    #     if type(node) == str:
+    #         return node
+    #
+    #     left = self.eliminateImplication(node.left)
+    #     right = self.eliminateImplication(node.right)
+    #
+    #     if node.op != "=>":
+    #         return Binary(node.op, node.sign, left, right)
+    #
+    #     # TODO change left
+    #     left = Binary("!", True, "", left)
+    #     return Binary("|", True, left, right)
