@@ -40,7 +40,7 @@ class BNFtoCNFconverter:
             if sentence[0] == '!':
                 sentence = sentence.replace(' ', '')
             return self.parse(sentence, op[1:])
-        return Binary(op[0], False, self.parse(sentence[:idx], op), self.parse(sentence[idx+len(op[0]):], op))
+        return Binary(op[0], True, self.parse(sentence[:idx], op), self.parse(sentence[idx+len(op[0]):], op))
 
 
     def eliminateIff(self, node):
@@ -67,12 +67,13 @@ class BNFtoCNFconverter:
             return Binary(node.op, node.sign, left, right)
 
         # TODO change left sign
-        #left = Binary("|", not node.sign, left, right)
-        if type(left) == str:
-            left = '!'+left
-        else:
-            left.sign = not left.sign
-        return Binary("|", node.sign, left, right)
+        # left = Binary("|", not node.sign, left, right)
+        # if type(node) == str:
+        #     node = '!' + node
+        # else:
+        #     left.sign = not left.sign
+
+        return Binary("|", False, left, right)
 
 
     def applyDeMorganLaw(self, node):
@@ -85,17 +86,37 @@ class BNFtoCNFconverter:
         if node.sign is True:
             return Binary(node.op, node.sign, left, right)
 
-        if node.op == '&':
-            node.op = '|'
-        elif node.op == '|':
-            node.op = '&'
-
-        if type(left) != str:
-            left.sign = not left.sign
-            right.sign = not right.sign
+        # if node.op == '&':
+        #     node.op = '|'
+        # elif node.op == '|':
+        #     node.op = '&'
+        #
+        # if type(left) != str:
+        #     left.sign = not left.sign
+        #     #right.sign = not right.sign
 
         return Binary("|", node.sign, left, right)
 
+
+    def negateNodes(self, node):
+        if type(node) == str:
+            return node
+
+        left = self.negateNodes(node.left)
+        right = self.negateNodes(node.right)
+
+
+
+        if node.op != "=>":
+            return Binary(node.op, node.sign, left, right)
+
+        # TODO change left sign
+        # left = Binary("|", not node.sign, left, right)
+        if type(left) == str:
+            left = '!' + left
+        else:
+            left.sign = not left.sign
+        return Binary("|", node.sign, left, right)
 
     # def eliminateImplication(self, node):
     #     if type(node) == str:
