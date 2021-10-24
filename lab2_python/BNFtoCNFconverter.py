@@ -68,12 +68,12 @@ class BNFtoCNFconverter:
 
         # TODO change left sign
         # left = Binary("|", not node.sign, left, right)
-        # if type(left) == str:
-        #     left = '!' + left
-        # else:
-        #     left.sign = not left.sign
-        if type(left) != str:
+        if type(left) == str:
+            left = '!' + left
+        else:
             left.sign = not left.sign
+        # if type(left) != str:
+        #     left.sign = not left.sign
         return Binary("|", node.sign, left, right)
 
 
