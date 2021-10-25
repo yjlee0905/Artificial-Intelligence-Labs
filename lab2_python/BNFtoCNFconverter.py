@@ -79,6 +79,7 @@ class BNFtoCNFconverter:
 
     def applyDeMorganLaw(self, node):
         if type(node) == str:
+#            print "node: " + node
             return node
 
         left = self.applyDeMorganLaw(node.left)
@@ -94,6 +95,7 @@ class BNFtoCNFconverter:
 
         if type(left) != str:
             left.sign = not left.sign
+            left = self.applyDeMorganLaw(left)
         else:
             if left[0] == '!':
                 left = left[1:]
@@ -102,6 +104,7 @@ class BNFtoCNFconverter:
 
         if type(right) != str:
             right.sign = not right.sign
+            right = self.applyDeMorganLaw(right)
         else:
             if right[0] == '!':
                 right = right[1:]
@@ -110,6 +113,40 @@ class BNFtoCNFconverter:
 
         return Binary(node.op, not node.sign, left, right)
 
+
+    # def applyDistributiveLaw(self, node):
+    #
+    #     node.left = self.applyDistributiveLaw(node.left)
+    #     node.right = self.applyDistributiveLaw(node.right)
+    #
+    #     if node.op == '|':
+    #         if type(node.left) != str and node.left.op == '&':
+    #             # make left child  (A|C)
+    #             # make right child  (B|C)
+    #             # node.op = '&'
+    #         # same for the right child
+    #
+    #     node.left = self.applyDistributiveLaw(node.left)
+    #     node.right = self.applyDistributiveLaw(node.right)
+
+
+
+
+
+
+    def separateSentences(self, node):
+        separated = []
+        node.inorderTraversal(node, separated)
+
+        strSeparated = ''
+        for atom in separated:
+            strSeparated += (atom + ' ')
+
+        splited = strSeparated.split('&')
+        result = []
+        for sentence in splited:
+            result.append(sentence.strip())
+        return result
 
     def negateNodes(self, node):
         if type(node) == str:

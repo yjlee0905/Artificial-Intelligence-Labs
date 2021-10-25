@@ -130,7 +130,7 @@ if __name__ == "__main__":
                     print key + " = " + result[key]
 
     elif mode == 'converter':
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
+        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
         parser = Parser()
         sentences = parser.parseAndFormatSentences(fileName)
 
@@ -146,6 +146,11 @@ if __name__ == "__main__":
             converted.inorderTraversal(converted, result)
             print result
             converted = converter.applyDeMorganLaw(converted)
-            print converter
+            result = []
+            converted.inorderTraversal(converted, result)
+            print result
+            result = converter.separateSentences(converted)
+            print result
+
 
 
