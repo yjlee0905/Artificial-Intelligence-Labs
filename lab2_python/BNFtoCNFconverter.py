@@ -1,39 +1,21 @@
-import re
+from Parser import Binary
 import Constant
-
-class Binary:
-    def __init__(self, op, sign, token1, token2):
-        self.op = op
-        self.sign = sign
-        self.left = token1
-        self.right = token2
-
-    def inorderTraversal(self, root, answer):
-        if isinstance(root, Binary) is False:
-            answer.append(root)
-            return
-
-        self.inorderTraversal(root.left, answer)
-        answer.append(root.op)
-        self.inorderTraversal(root.right, answer)
-        return
-
 
 class BNFtoCNFconverter:
 
-    def parse(self, sentence, op):
-        if not op:
-            sentence = sentence.strip()
-            if sentence[0] == '!':
-                sentence = sentence.replace(' ', '')
-            return sentence
-        idx = sentence.rfind(op[0])
-        if idx == -1:
-            sentence = sentence.strip()
-            if sentence[0] == '!':
-                sentence = sentence.replace(' ', '')
-            return self.parse(sentence, op[1:])
-        return Binary(op[0], True, self.parse(sentence[:idx], op), self.parse(sentence[idx+len(op[0]):], op))
+    # def parse(self, sentence, op):
+    #     if not op:
+    #         sentence = sentence.strip()
+    #         if sentence[0] == '!':
+    #             sentence = sentence.replace(' ', '')
+    #         return sentence
+    #     idx = sentence.rfind(op[0])
+    #     if idx == -1:
+    #         sentence = sentence.strip()
+    #         if sentence[0] == '!':
+    #             sentence = sentence.replace(' ', '')
+    #         return self.parse(sentence, op[1:])
+    #     return Binary(op[0], True, self.parse(sentence[:idx], op), self.parse(sentence[idx+len(op[0]):], op))
 
 
     def eliminateIff(self, node):

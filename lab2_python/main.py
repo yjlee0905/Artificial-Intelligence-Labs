@@ -63,9 +63,9 @@ if __name__ == "__main__":
     parser.add_argument('-file', type=str)
 
     args = parser.parse_args()
-    mode = 'converter'
+    mode = 'cnf'
     fileName = args.file
-    isVerbose = args.v
+    isVerbose = True
 
     if mode == 'dpll':
         # DPLL solver
@@ -89,55 +89,16 @@ if __name__ == "__main__":
                     print key + " = " + result[key]
 
     elif mode == 'cnf':
-        # BNF to CNF converter
         # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
         parser = Parser()
         sentences = parser.parseAndFormatSentences(fileName)
 
         for sentence in sentences:
-            converter = BNFtoCNFconverter(sentence)
-            printCNF(converter.runConverter(sentence, isVerbose), isVerbose)
-            if isVerbose:
-                print
 
-    elif mode == 'solver':
+            parser = Parser()
+            parseTree = parser.parse(sentence, Constant.OPERATORS)
 
-        #fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
-        parser = Parser()
-        sentences = parser.parseAndFormatSentences(fileName)
-
-        inputs = []
-        for sentence in sentences:
-            converter = BNFtoCNFconverter(sentence)
-            converted = converter.runConverter(sentence, isVerbose)
-            printCNF(converted, isVerbose)
-            if isVerbose:
-                print
-            inputs += makeInputForDPLL(converted)
-
-        if isVerbose:
-            print
-            print "Run DPLL algorithm"
-        dpllSolver = DPLLsolver()
-        atoms = dpllSolver.parseAtoms(sentences=inputs)
-        result = dpllSolver.runDPLL(atoms, inputs, isVerbose)
-
-        if result[Constant.RESULT] == Constant.FAILURE:
-            print "NO VALID ASSIGNMENT"
-        elif result[Constant.RESULT] == Constant.SUCCESS:
-            for key in result:
-                if key is not Constant.RESULT:
-                    print key + " = " + result[key]
-
-    elif mode == 'converter':
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
-        parser = Parser()
-        sentences = parser.parseAndFormatSentences(fileName)
-
-        for sentence in sentences:
             converter = BNFtoCNFconverter()
-            parseTree = converter.parse(sentence, Constant.OPERATORS)
-
             step1 = converter.eliminateIff(parseTree)
             if isVerbose:
                 print "step1: Eliminate <=> (If and Only If)"
@@ -171,3 +132,33 @@ if __name__ == "__main__":
                 print "step5: Separate Sentences"
             for res in resultStep5:
                 print res
+
+    elif mode == 'solver':
+
+        #fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
+        parser = Parser()
+        sentences = parser.parseAndFormatSentences(fileName)
+
+        inputs = []
+        for sentence in sentences:
+            converter = BNFtoCNFconverter(sentence)
+            converted = converter.runConverter(sentence, isVerbose)
+            printCNF(converted, isVerbose)
+            if isVerbose:
+                print
+            inputs += makeInputForDPLL(converted)
+
+        if isVerbose:
+            print
+            print "Run DPLL algorithm"
+        dpllSolver = DPLLsolver()
+        atoms = dpllSolver.parseAtoms(sentences=inputs)
+        result = dpllSolver.runDPLL(atoms, inputs, isVerbose)
+
+        if result[Constant.RESULT] == Constant.FAILURE:
+            print "NO VALID ASSIGNMENT"
+        elif result[Constant.RESULT] == Constant.SUCCESS:
+            for key in result:
+                if key is not Constant.RESULT:
+                    print key + " = " + result[key]
+
