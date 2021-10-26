@@ -14,6 +14,12 @@ class DPLLsolver:
         return list(atoms)
 
     def runDPLL(self, atoms, sentences, isVerbose):
+        if isVerbose:
+            for sentence in sentences:
+                for atom in sentence:
+                    print atom,
+                print
+
         result = {}
         for i in range(0, len(atoms)):
             result[atoms[i]] = Constant.UNBOUNDED
@@ -118,29 +124,6 @@ class DPLLsolver:
         for key in marks:
             if marks[key] == Constant.POSITIVE or marks[key] == Constant.NEGATE:
                 pure[key] = marks[key]
-
-        # if len(pure.keys()) > 0:
-        #     pureOccurence = {}
-        #     for key in pure:
-        #         for sentence in sentences:
-        #             if key in sentence and key not in pureOccurence:
-        #                 pureOccurence[key] = 1
-        #             elif '!'+key in sentence and key not in pureOccurence:
-        #                 pureOccurence[key] = 1
-        #             elif '!'+key in sentence:
-        #                 pureOccurence[key] += 1
-        #             elif key in sentence:
-        #                 pureOccurence[key] += 1
-        #     maxValue = max(pureOccurence.values())
-        #     maxKeys = [key for key, value in pureOccurence.items() if value == maxValue]
-        #
-        #     filtered = {}
-        #     for key in maxKeys:
-        #         filtered[key] = pure[key]
-        #     return filtered
-        # else:
-        #     return pure
-
         return pure
 
     def processEasyCase(self, result, oneAtoms, isVerbose):
@@ -166,11 +149,17 @@ class DPLLsolver:
                     result[atom[1:]] = Constant.FALSE
                     if isVerbose:
                         print "easyCase " + atom[1:] + " = false"
+                        for singleAtoms in singleStateAtoms:
+                            if atom[1:] in singleAtoms:
+                                print atom[1:] + ' contradiction'
             else:
                 if result[atom] == Constant.UNBOUNDED:
                     result[atom] = Constant.TRUE
                     if isVerbose:
                         print "easyCase " + atom + " = true"
+                        for singleAtoms in singleStateAtoms:
+                            if '!' + atom in singleAtoms:
+                                print '!' + atom + ' contradiction'
 
     def deleteAssigned(self, sentences, curAssigned, isVerbose):
         sortedAtoms = sorted(list(curAssigned.keys()))
