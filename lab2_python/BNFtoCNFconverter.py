@@ -25,7 +25,6 @@ class BNFtoCNFconverter:
         if node.op != "=>":
             return Binary(node.op, node.sign, left, right)
 
-        # TODO change left sign
         if type(left) == str:
             left = '!' + left
         else:
@@ -123,3 +122,11 @@ class BNFtoCNFconverter:
             result.append(strSeparated)
 
         return result
+
+    def printStepResult(self, tree):
+        result = []
+        tree.inorderTraversal(tree, result)
+
+        for i in range(0, len(result)):
+            print result[i] + ' ',
+        print

@@ -20,7 +20,7 @@ class Binary:
 
 
 class Parser:
-    # parse files
+
     def parseAndFormatSentences(self, fileName):
         sentences = open(fileName, 'r').read().split('\n')
 
@@ -38,6 +38,7 @@ class Parser:
                     parsedStr += parsed[idx] + ' '
             parsedSentences.append(parsedStr)
         return parsedSentences
+
 
     def parse(self, sentence, op):
         if not op:

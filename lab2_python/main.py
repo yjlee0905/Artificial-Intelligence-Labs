@@ -18,30 +18,22 @@ def runCNFconverter(fileName, isVerbose):
         step1 = converter.eliminateIff(parseTree)
         if isVerbose:
             print "step1: Eliminate <=> (If and Only If)"
-            resultStep1 = []
-            step1.inorderTraversal(step1, resultStep1)
-            print resultStep1
+            converter.printStepResult(step1)
 
         step2 = converter.eliminateImplication(step1)
         if isVerbose:
             print "step2: Eliminate => (Implication)"
-            resultStep2 = []
-            step2.inorderTraversal(step2, resultStep2)
-            print resultStep2
+            converter.printStepResult(step2)
 
         step3 = converter.applyDeMorganLaw(step2)
         if isVerbose:
             print "step3: Apply DeMorgan's Law"
-            resultStep3 = []
-            step3.inorderTraversal(step3, resultStep3)
-            print resultStep3
+            converter.printStepResult(step3)
 
         step4 = converter.applyDistributiveLaw(step3)
         if isVerbose:
             print "step4: Apply Distributive Law"
-            resultStep4 = []
-            step4.inorderTraversal(step4, resultStep4)
-            print resultStep4
+            converter.printStepResult(step4)
 
         resultStep5 = converter.separateSentences(step4)
         if isVerbose:
@@ -61,13 +53,12 @@ if __name__ == "__main__":
     parser.add_argument('-file', type=str)
 
     args = parser.parse_args()
-    mode = 'solver'
+    mode = args.mode
     fileName = args.file
-    isVerbose = True
+    isVerbose = args.v
 
     if mode == 'dpll':
-        # DPLL solver
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
+        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
 
         parsedSentences = []
         sentences = open(fileName, 'r').read().split('\n')
@@ -87,11 +78,11 @@ if __name__ == "__main__":
                     print key + " = " + result[key]
 
     elif mode == 'cnf':
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
+        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
         runCNFconverter(fileName, isVerbose)
 
     elif mode == 'solver':
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
+        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
         cnfFormed = runCNFconverter(fileName, isVerbose)
 
         converted = []
