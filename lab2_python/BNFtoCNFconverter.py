@@ -79,7 +79,6 @@ class BNFtoCNFconverter:
 
     def applyDeMorganLaw(self, node):
         if type(node) == str:
-#            print "node: " + node
             return node
 
         left = self.applyDeMorganLaw(node.left)
@@ -114,25 +113,37 @@ class BNFtoCNFconverter:
         return Binary(node.op, not node.sign, left, right)
 
 
-    # def applyDistributiveLaw(self, node):
-    #
-    #     node.left = self.applyDistributiveLaw(node.left)
-    #     node.right = self.applyDistributiveLaw(node.right)
-    #
-    #     if node.op == '|':
-    #         if type(node.left) != str and node.left.op == '&':
-    #             # make left child  (A|C)
-    #             # make right child  (B|C)
-    #             # node.op = '&'
-    #         # same for the right child
-    #
-    #     node.left = self.applyDistributiveLaw(node.left)
-    #     node.right = self.applyDistributiveLaw(node.right)
+    def applyDistributiveLaw(self, node):
+        if type(node) == str:
+            return node
 
+        node.left = self.applyDistributiveLaw(node.left)
+        node.right = self.applyDistributiveLaw(node.right)
+        # TODO &
 
+        if node.op == '|':
+            if type(node.left) != str and node.left.op == '&':
+                # TODO overwriting  P <=> Q <=> R check
+                # TODO new node, X overwrite
+                newLeft = Binary('|', node.sign, node.left.left, node.right)
+                newRight = Binary('|', node.sign, node.left.right, node.right)
+                node.op = '&'
 
+                node.left = self.applyDistributiveLaw(newLeft)
+                node.right = self.applyDistributiveLaw(newRight)
 
+                # make left child  (A|C)
+                # make right child  (B|C)
+            elif type(node.right) != str and node.right.op == '&':
+                newLeft = Binary('|', node.sign, node.right.left, node.left)
+                newRight = Binary('|', node.sign, node.right.right, node.left)
+                node.op = '&'
+                # make left child  (A|C)
+                # make right child  (B|C)
+                node.left = self.applyDistributiveLaw(newLeft)
+                node.right = self.applyDistributiveLaw(newRight)
 
+        return Binary(node.op, node.sign, node.left, node.right)
 
     def separateSentences(self, node):
         separated = []
@@ -147,37 +158,3 @@ class BNFtoCNFconverter:
         for sentence in splited:
             result.append(sentence.strip())
         return result
-
-    def negateNodes(self, node):
-        if type(node) == str:
-            return node
-
-        left = self.negateNodes(node.left)
-        right = self.negateNodes(node.right)
-
-
-
-        if node.op != "=>":
-            return Binary(node.op, node.sign, left, right)
-
-        # TODO change left sign
-        # left = Binary("|", not node.sign, left, right)
-        if type(left) == str:
-            left = '!' + left
-        else:
-            left.sign = not left.sign
-        return Binary("|", node.sign, left, right)
-
-    # def eliminateImplication(self, node):
-    #     if type(node) == str:
-    #         return node
-    #
-    #     left = self.eliminateImplication(node.left)
-    #     right = self.eliminateImplication(node.right)
-    #
-    #     if node.op != "=>":
-    #         return Binary(node.op, node.sign, left, right)
-    #
-    #     # TODO change left
-    #     left = Binary("!", True, "", left)
-    #     return Binary("|", True, left, right)

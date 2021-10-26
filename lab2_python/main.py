@@ -140,17 +140,23 @@ if __name__ == "__main__":
             converted = converter.eliminateIff(tree)
             result = []
             converted.inorderTraversal(converted, result)
-            print result
+            #print result
             converted = converter.eliminateImplication(converted)
             result = []
             converted.inorderTraversal(converted, result)
-            print result
+            #print result
             converted = converter.applyDeMorganLaw(converted)
             result = []
             converted.inorderTraversal(converted, result)
-            print result
+            #print result
+            result = converter.applyDistributiveLaw(converted)
+            result = []
+            converted.inorderTraversal(converted, result)
+            #print result
+            result = []
             result = converter.separateSentences(converted)
-            print result
+            for r in result:
+                print r
 
 
 
