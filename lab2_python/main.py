@@ -48,14 +48,18 @@ def runCNFconverter(fileName, isVerbose):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-mode', type=str)
-    parser.add_argument('-v', type=bool, default=False)
-    parser.add_argument('-file', type=str)
+    parser.add_argument('-mode', type=str, default='solver', help="Mode: cnf, dpll, solver")
+    parser.add_argument('-v', type=bool, default=False, help="Default: False, Support verbose mode for True")
+    parser.add_argument('-file', type=str, help="Please specify input file name.")
 
     args = parser.parse_args()
     mode = args.mode
     fileName = args.file
     isVerbose = args.v
+
+    if fileName is None:
+        print "Please specify your input file."
+        exit()
 
     if mode == 'dpll':
         # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
