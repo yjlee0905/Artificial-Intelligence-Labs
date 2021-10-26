@@ -4,55 +4,53 @@ from Parser import Parser
 from DPLLsolver import DPLLsolver
 from BNFtoCNFconverter import BNFtoCNFconverter
 
-def makeInputForDPLL(results):
-    inputs = []
-    for result in results:
-        line = result.split(' & ')
-        for clause in line:
-            if clause[0] == '(' and clause[-1] == ')':
-                clause = clause[1:-1]
-            clause = formatResult(clause)
-            clause = clause.strip().split()
-            inputs.append(clause)
-    return inputs
+def runCNFconverter(fileName, isVerbose):
+    parser = Parser()
+    sentences = parser.parseAndFormatSentences(fileName)
 
+    converted = []
+    for sentence in sentences:
 
-def printCNF(results, isVerbose):
-    if isVerbose:
-        print "step5: Separate top-level conjunctions into separate sentences"
+        parser = Parser()
+        parseTree = parser.parse(sentence, Constant.OPERATORS)
 
-    for result in results:
-        line = result.split(' & ')
-        for clause in line:
-            if clause[0] == '(' and clause[-1] == ')':
-                clause = clause[1:-1]
-            clause = formatResult(clause)
-            print clause
+        converter = BNFtoCNFconverter()
+        step1 = converter.eliminateIff(parseTree)
+        if isVerbose:
+            print "step1: Eliminate <=> (If and Only If)"
+            resultStep1 = []
+            step1.inorderTraversal(step1, resultStep1)
+            print resultStep1
 
+        step2 = converter.eliminateImplication(step1)
+        if isVerbose:
+            print "step2: Eliminate => (Implication)"
+            resultStep2 = []
+            step2.inorderTraversal(step2, resultStep2)
+            print resultStep2
 
-def formatResult(line):
-    newLine = ''
-    idx = 0
-    isNegate = False
-    while idx < len(line):
-        if line[idx] == '!':
-            newLine += line[idx]
-            isNegate = True
-            idx += 1
-        elif line[idx] == '|':
-            idx += 1
-            continue
-        elif isNegate and line[idx] == ' ':
-            idx += 1
-            continue
-        elif isNegate and line[idx] != ' ':
-            isNegate = False
-            newLine += line[idx]
-            idx += 1
-        else:
-            newLine += line[idx]
-            idx += 1
-    return newLine
+        step3 = converter.applyDeMorganLaw(step2)
+        if isVerbose:
+            print "step3: Apply DeMorgan's Law"
+            resultStep3 = []
+            step3.inorderTraversal(step3, resultStep3)
+            print resultStep3
+
+        step4 = converter.applyDistributiveLaw(step3)
+        if isVerbose:
+            print "step4: Apply Distributive Law"
+            resultStep4 = []
+            step4.inorderTraversal(step4, resultStep4)
+            print resultStep4
+
+        resultStep5 = converter.separateSentences(step4)
+        if isVerbose:
+            print "step5: Separate Sentences"
+        for res in resultStep5:
+            print res
+        converted += resultStep5
+
+    return converted
 
 
 if __name__ == "__main__":
@@ -63,13 +61,13 @@ if __name__ == "__main__":
     parser.add_argument('-file', type=str)
 
     args = parser.parse_args()
-    mode = 'cnf'
+    mode = 'solver'
     fileName = args.file
     isVerbose = True
 
     if mode == 'dpll':
         # DPLL solver
-        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
+        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
 
         parsedSentences = []
         sentences = open(fileName, 'r').read().split('\n')
@@ -89,71 +87,23 @@ if __name__ == "__main__":
                     print key + " = " + result[key]
 
     elif mode == 'cnf':
-        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
-        parser = Parser()
-        sentences = parser.parseAndFormatSentences(fileName)
-
-        for sentence in sentences:
-
-            parser = Parser()
-            parseTree = parser.parse(sentence, Constant.OPERATORS)
-
-            converter = BNFtoCNFconverter()
-            step1 = converter.eliminateIff(parseTree)
-            if isVerbose:
-                print "step1: Eliminate <=> (If and Only If)"
-                resultStep1 = []
-                step1.inorderTraversal(step1, resultStep1)
-                print resultStep1
-
-            step2 = converter.eliminateImplication(step1)
-            if isVerbose:
-                print "step2: Eliminate => (Implication)"
-                resultStep2 = []
-                step2.inorderTraversal(step2, resultStep2)
-                print resultStep2
-
-            step3 = converter.applyDeMorganLaw(step2)
-            if isVerbose:
-                print "step3: Apply DeMorgan's Law"
-                resultStep3 = []
-                step3.inorderTraversal(step3, resultStep3)
-                print resultStep3
-
-            step4 = converter.applyDistributiveLaw(step3)
-            if isVerbose:
-                print "step4: Apply Distributive Law"
-                resultStep4 = []
-                step4.inorderTraversal(step4, resultStep4)
-                print resultStep4
-
-            resultStep5 = converter.separateSentences(step4)
-            if isVerbose:
-                print "step5: Separate Sentences"
-            for res in resultStep5:
-                print res
+        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
+        runCNFconverter(fileName, isVerbose)
 
     elif mode == 'solver':
+        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
+        cnfFormed = runCNFconverter(fileName, isVerbose)
 
-        #fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
-        parser = Parser()
-        sentences = parser.parseAndFormatSentences(fileName)
-
-        inputs = []
-        for sentence in sentences:
-            converter = BNFtoCNFconverter(sentence)
-            converted = converter.runConverter(sentence, isVerbose)
-            printCNF(converted, isVerbose)
-            if isVerbose:
-                print
-            inputs += makeInputForDPLL(converted)
+        converted = []
+        for cnfSentence in cnfFormed:
+            converted.append(cnfSentence.split())
 
         if isVerbose:
             print
             print "Run DPLL algorithm"
         dpllSolver = DPLLsolver()
-        atoms = dpllSolver.parseAtoms(sentences=inputs)
-        result = dpllSolver.runDPLL(atoms, inputs, isVerbose)
+        atoms = dpllSolver.parseAtoms(converted)
+        result = dpllSolver.runDPLL(atoms, converted, isVerbose)
 
         if result[Constant.RESULT] == Constant.FAILURE:
             print "NO VALID ASSIGNMENT"
@@ -161,4 +111,3 @@ if __name__ == "__main__":
             for key in result:
                 if key is not Constant.RESULT:
                     print key + " = " + result[key]
-

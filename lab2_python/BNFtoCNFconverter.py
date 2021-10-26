@@ -1,22 +1,6 @@
 from Parser import Binary
-import Constant
 
 class BNFtoCNFconverter:
-
-    # def parse(self, sentence, op):
-    #     if not op:
-    #         sentence = sentence.strip()
-    #         if sentence[0] == '!':
-    #             sentence = sentence.replace(' ', '')
-    #         return sentence
-    #     idx = sentence.rfind(op[0])
-    #     if idx == -1:
-    #         sentence = sentence.strip()
-    #         if sentence[0] == '!':
-    #             sentence = sentence.replace(' ', '')
-    #         return self.parse(sentence, op[1:])
-    #     return Binary(op[0], True, self.parse(sentence[:idx], op), self.parse(sentence[idx+len(op[0]):], op))
-
 
     def eliminateIff(self, node):
         if type(node) == str:
@@ -42,13 +26,10 @@ class BNFtoCNFconverter:
             return Binary(node.op, node.sign, left, right)
 
         # TODO change left sign
-        # left = Binary("|", not node.sign, left, right)
         if type(left) == str:
             left = '!' + left
         else:
             left.sign = not left.sign
-        # if type(left) != str:
-        #     left.sign = not left.sign
         return Binary("|", node.sign, left, right)
 
 
@@ -94,7 +75,6 @@ class BNFtoCNFconverter:
 
         node.left = self.applyDistributiveLaw(node.left)
         node.right = self.applyDistributiveLaw(node.right)
-        # TODO &
 
         if node.op == '|':
             if type(node.left) != str and node.left.op == '&':
