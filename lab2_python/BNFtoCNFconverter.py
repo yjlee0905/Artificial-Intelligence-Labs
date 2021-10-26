@@ -144,12 +144,20 @@ class BNFtoCNFconverter:
         separated = []
         node.inorderTraversal(node, separated)
 
+        result = []
         strSeparated = ''
         for atom in separated:
-            strSeparated += (atom + ' ')
+            if atom == '|':
+                continue
+            elif atom == '&':
+                strSeparated = strSeparated.strip()
+                result.append(strSeparated)
+                strSeparated = ''
+            else:
+                strSeparated += (atom + ' ')
 
-        splited = strSeparated.split('&')
-        result = []
-        for sentence in splited:
-            result.append(sentence.strip())
+        if len(strSeparated) > 0:
+            strSeparated = strSeparated.strip()
+            result.append(strSeparated)
+
         return result
