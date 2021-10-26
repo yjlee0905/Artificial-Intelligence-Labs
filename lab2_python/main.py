@@ -152,7 +152,7 @@ if __name__ == "__main__":
             result = converter.applyDistributiveLaw(converted)
             result = []
             converted.inorderTraversal(converted, result)
-            #print result
+            print result
             result = []
             result = converter.separateSentences(converted)
             for r in result:

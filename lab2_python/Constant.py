@@ -11,5 +11,5 @@ RESULT = 'RESULT'
 SUCCESS = 'SUCCESS'
 FAILURE = 'FAILURE'
 
-OPERATORS = ["<=>", "=>", "&", "|"]
+OPERATORS = ["<=>", "=>", "|", "&"]
 #DELIMITER = '<=> => & |'
