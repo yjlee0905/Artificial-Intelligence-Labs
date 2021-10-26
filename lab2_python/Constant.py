@@ -12,4 +12,3 @@ SUCCESS = 'SUCCESS'
 FAILURE = 'FAILURE'
 
 OPERATORS = ["<=>", "=>", "|", "&"]
-#DELIMITER = '<=> => & |'

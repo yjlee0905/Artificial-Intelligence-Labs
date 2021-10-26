@@ -130,33 +130,42 @@ if __name__ == "__main__":
                     print key + " = " + result[key]
 
     elif mode == 'converter':
-        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
+        fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
         parser = Parser()
         sentences = parser.parseAndFormatSentences(fileName)
 
         for sentence in sentences:
             converter = BNFtoCNFconverter()
-            tree = converter.parse(sentence, Constant.OPERATORS)
-            converted = converter.eliminateIff(tree)
-            result = []
-            converted.inorderTraversal(converted, result)
-            #print result
-            converted = converter.eliminateImplication(converted)
-            result = []
-            converted.inorderTraversal(converted, result)
-            #print result
-            converted = converter.applyDeMorganLaw(converted)
-            result = []
-            converted.inorderTraversal(converted, result)
-            #print result
-            result = converter.applyDistributiveLaw(converted)
-            result = []
-            converted.inorderTraversal(converted, result)
-            print result
-            result = []
-            result = converter.separateSentences(converted)
-            for r in result:
-                print r
+            parseTree = converter.parse(sentence, Constant.OPERATORS)
+
+            print "step1: Eliminate <=> (If and Only If)"
+            step1 = converter.eliminateIff(parseTree)
+            resultStep1 = []
+            step1.inorderTraversal(step1, resultStep1)
+            print resultStep1
+
+            print "step2: Eliminate => (Implication)"
+            step2 = converter.eliminateImplication(step1)
+            resultStep2 = []
+            step2.inorderTraversal(step2, resultStep2)
+            print resultStep2
+
+            print "step3: Apply DeMorgan's Law"
+            step3 = converter.applyDeMorganLaw(step2)
+            resultStep3 = []
+            step3.inorderTraversal(step3, resultStep3)
+            print resultStep3
+
+            print "step4: Apply Distributive Law"
+            step4 = converter.applyDistributiveLaw(step3)
+            resultStep4 = []
+            step4.inorderTraversal(step4, resultStep4)
+            print resultStep4
+
+            print "step5: Separate Sentences"
+            resultStep5 = converter.separateSentences(step4)
+            for res in resultStep5:
+                print res
 
 
 

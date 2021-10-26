@@ -10,7 +10,6 @@ class Binary:
 
     def inorderTraversal(self, root, answer):
         if isinstance(root, Binary) is False:
-            #print root
             answer.append(root)
             return
 
@@ -18,12 +17,6 @@ class Binary:
         answer.append(root.op)
         self.inorderTraversal(root.right, answer)
         return
-
-    # def isAtom(self):
-    #     if self.left is None and self.right is None:
-    #         return True
-    #     return False
-
 
 
 class BNFtoCNFconverter:
@@ -125,6 +118,8 @@ class BNFtoCNFconverter:
             if type(node.left) != str and node.left.op == '&':
                 # TODO overwriting  P <=> Q <=> R check
                 # TODO new node, X overwrite
+                # make left child  (A|C)
+                # make right child  (B|C)
                 newLeft = Binary('|', node.sign, node.left.left, node.right)
                 newRight = Binary('|', node.sign, node.left.right, node.right)
                 node.op = '&'
@@ -132,18 +127,18 @@ class BNFtoCNFconverter:
                 node.left = self.applyDistributiveLaw(newLeft)
                 node.right = self.applyDistributiveLaw(newRight)
 
+            elif type(node.right) != str and node.right.op == '&':
                 # make left child  (A|C)
                 # make right child  (B|C)
-            elif type(node.right) != str and node.right.op == '&':
                 newLeft = Binary('|', node.sign, node.right.left, node.left)
                 newRight = Binary('|', node.sign, node.right.right, node.left)
                 node.op = '&'
-                # make left child  (A|C)
-                # make right child  (B|C)
+
                 node.left = self.applyDistributiveLaw(newLeft)
                 node.right = self.applyDistributiveLaw(newRight)
 
         return Binary(node.op, node.sign, node.left, node.right)
+
 
     def separateSentences(self, node):
         separated = []
