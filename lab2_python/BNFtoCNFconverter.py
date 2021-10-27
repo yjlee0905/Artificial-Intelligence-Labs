@@ -130,3 +130,17 @@ class BNFtoCNFconverter:
         for i in range(0, len(result)):
             print result[i] + ' ',
         print
+
+    def printStep2Result(self, root, result):
+        if isinstance(root, Binary) is False:
+            result.append(root)
+            return
+
+        if root.sign == False:
+            result.append('!(')
+        self.printStep2Result(root.left, result)
+        result.append(root.op)
+        self.printStep2Result(root.right, result)
+        if root.sign == False:
+            result.append(')')
+        return

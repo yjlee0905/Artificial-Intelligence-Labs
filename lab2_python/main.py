@@ -23,7 +23,11 @@ def runCNFconverter(fileName, isVerbose):
         step2 = converter.eliminateImplication(step1)
         if isVerbose:
             print "step2: Eliminate => (Implication)"
-            converter.printStepResult(step2)
+            step2Res = []
+            converter.printStep2Result(step2, step2Res)
+            for i in range(0, len(step2Res)):
+                print step2Res[i] + ' ',
+            print
 
         step3 = converter.applyDeMorganLaw(step2)
         if isVerbose:
