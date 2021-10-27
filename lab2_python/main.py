@@ -4,7 +4,7 @@ from Parser import Parser
 from DPLLsolver import DPLLsolver
 from BNFtoCNFconverter import BNFtoCNFconverter
 
-def runCNFconverter(fileName, isVerbose):
+def runCNFconverter(fileName, isVerbose, isSolverMode):
     parser = Parser()
     sentences = parser.parseAndFormatSentences(fileName)
 
@@ -42,8 +42,13 @@ def runCNFconverter(fileName, isVerbose):
         resultStep5 = converter.separateSentences(step4)
         if isVerbose:
             print "step5: Separate Sentences"
-        for res in resultStep5:
-            print res
+            for res in resultStep5:
+                print res
+
+        elif not isSolverMode:
+            for res in resultStep5:
+                print res
+
         converted += resultStep5
 
     return converted
@@ -87,11 +92,11 @@ if __name__ == "__main__":
 
     elif mode == 'cnf':
         # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
-        runCNFconverter(fileName, isVerbose)
+        runCNFconverter(fileName, isVerbose, False)
 
     elif mode == 'solver':
         # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
-        cnfFormed = runCNFconverter(fileName, isVerbose)
+        cnfFormed = runCNFconverter(fileName, isVerbose, True)
 
         converted = []
         for cnfSentence in cnfFormed:
