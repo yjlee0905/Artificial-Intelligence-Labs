@@ -64,14 +64,35 @@ class Parser:
         print(self.decisionNodes)
         print(self.chanceNodes)
 
-        for chanceNode in self.chanceNodes:
-            if chanceNode.count('.') == 1:
+        for i in range(0, len(self.chanceNodes)):
+            if self.chanceNodes[i].count('.') == 1:
+                chanceNode = self.chanceNodes[i]
                 idx = chanceNode.find('.')
-                numerator = chanceNode[idx+1:].strip()
+                numerator = chanceNode[idx + 1:].strip()
                 denominator = pow(10, len(numerator))
                 decimal = int(numerator) / denominator
+
+                self.chanceNodes[i] = decimal
+        # for chanceNode in self.chanceNodes:
+        #     if chanceNode.count('.') == 1:
+        #         idx = chanceNode.find('.')
+        #         numerator = chanceNode[idx+1:].strip()
+        #         denominator = pow(10, len(numerator))
+        #         decimal = int(numerator) / denominator
+
+        for key in self.decisionNodes:
+            if self.decisionNodes[key].count('.') == 1:
+                decisionNode = self.decisionNodes[key]
+                idx = decisionNode.find('.')
+                numerator = decisionNode[idx + 1:].strip()
+                denominator = pow(10, len(numerator))
+                decimal = float(numerator) / denominator
+                self.decisionNodes[key] = decimal
 
 
             else:
                 print chanceNode + ' has wrong format of probability'
                 # TODO exit?
+
+        print(self.decisionNodes)
+        print(self.chanceNodes)
