@@ -61,24 +61,18 @@ class Parser:
                 self.terminals.append(node)
 
     def parseAndValidateProbabilites(self):
-        print(self.decisionNodes)
-        print(self.chanceNodes)
 
-        for i in range(0, len(self.chanceNodes)):
-            if self.chanceNodes[i].count('.') == 1:
-                chanceNode = self.chanceNodes[i]
+        for key in self.chanceNodes:
+            if self.chanceNodes[key].count('.') == 1:
+                chanceNode = self.chanceNodes[key]
                 idx = chanceNode.find('.')
                 numerator = chanceNode[idx + 1:].strip()
                 denominator = pow(10, len(numerator))
                 decimal = int(numerator) / denominator
-
-                self.chanceNodes[i] = decimal
-        # for chanceNode in self.chanceNodes:
-        #     if chanceNode.count('.') == 1:
-        #         idx = chanceNode.find('.')
-        #         numerator = chanceNode[idx+1:].strip()
-        #         denominator = pow(10, len(numerator))
-        #         decimal = int(numerator) / denominator
+                self.chanceNodes[key] = decimal
+            else:
+                print self.chanceNodes[key] + ' has wrong format of probability'
+                # TODO exit?
 
         for key in self.decisionNodes:
             if self.decisionNodes[key].count('.') == 1:
@@ -88,11 +82,8 @@ class Parser:
                 denominator = pow(10, len(numerator))
                 decimal = float(numerator) / denominator
                 self.decisionNodes[key] = decimal
-
-
             else:
-                print chanceNode + ' has wrong format of probability'
-                # TODO exit?
+                print self.decisionNodes[key] + ' has wrong format of probability'
 
         print(self.decisionNodes)
         print(self.chanceNodes)
