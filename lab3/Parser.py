@@ -48,6 +48,9 @@ class Parser:
                     self.nodes.add(splitedValues[i])
                 self.edges[key] = splitedValues
 
+        self.setRewards()
+        self.setAndValidateTerminals()
+        self.parseAndValidateProbabilites()
         print(lines)
 
     def setRewards(self):
