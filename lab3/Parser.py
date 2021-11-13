@@ -54,9 +54,12 @@ class Parser:
         print(lines)
 
     def setRewards(self):
-        for key in self.edges.keys():
-            if key not in self.rewards:
-                self.rewards[key] = 0
+        for key in self.nodes:
+            if key in self.rewards:
+                self.rewards[key] = float(self.rewards[key])
+            else:
+                self.rewards[key] = 0.0
+
 
     def setAndValidateTerminals(self):
         for node in self.nodes:
@@ -65,17 +68,23 @@ class Parser:
 
     def parseAndValidateProbabilites(self):
 
+        parsedChanceNode = {}
         for key in self.chanceNodes:
-            if self.chanceNodes[key].count('.') == 1:
-                chanceNode = self.chanceNodes[key]
-                idx = chanceNode.find('.')
-                numerator = chanceNode[idx + 1:].strip()
-                denominator = pow(10, len(numerator))
-                decimal = int(numerator) / denominator
-                self.chanceNodes[key] = decimal
-            else:
-                print self.chanceNodes[key] + ' has wrong format of probability'
-                # TODO exit?
+            probabilities = self.chanceNodes[key]
+            for i in range(0, len(probabilities)):
+                if probabilities[i].count('.') == 1:
+                    chanceNode = probabilities[i]
+                    idx = chanceNode.find('.')
+                    numerator = chanceNode[idx + 1:].strip()
+                    denominator = pow(10, len(numerator))
+                    decimal = float(numerator) / denominator
+                    probabilities[i] = decimal
+                elif probabilities[i].strip() == '1':
+                    probabilities[i] = float(probabilities[i])
+                else:
+                    print probabilities[i] + ' has wrong format of probability'
+                    # TODO exit?
+            self.chanceNodes[key] = probabilities
 
         for key in self.decisionNodes:
             if self.decisionNodes[key].count('.') == 1:
@@ -85,8 +94,10 @@ class Parser:
                 denominator = pow(10, len(numerator))
                 decimal = float(numerator) / denominator
                 self.decisionNodes[key] = decimal
+            elif self.decisionNodes[key].strip() == '1':
+                self.decisionNodes[key] = float(self.decisionNodes[key])
             else:
-                print self.decisionNodes[key] + ' has wrong format of probability'
+                print key + ' has wrong format of probability'
 
         print(self.decisionNodes)
         print(self.chanceNodes)
