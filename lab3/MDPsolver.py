@@ -26,13 +26,27 @@ class MDPsolver(Parser):
             if key in self.decisionNodes:
                 policy[key] = self.edges[key][0]
 
-        for i in range(0, self.iter):
+        while True:
             values = self.valueIteration(policy)
+            newPolicy = self.policyIteration(values)
             print values
-            policy = self.policyIteration(values)
-            print policy
-            # greedy policy computation
+            print newPolicy
+            if self.isPolicySame(policy, newPolicy):
+                break
+            policy = newPolicy
 
+        # print Result
+        for node in policy:
+            print node + ' -> ' + policy[node]
+        for node in values:
+            print node + '=' + "{:.3f}".format(values[node]),
+
+
+    def isPolicySame(self, prevPolicy, newPolicy):
+        for node in newPolicy:
+            if prevPolicy[node] != newPolicy[node]:
+                return False
+        return True
 
     def valueIteration(self, policy):
         # initialize rewards
