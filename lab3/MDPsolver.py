@@ -23,8 +23,8 @@ class MDPsolver(Parser):
         # set initial policy TODO check initial policy
         policy = {}
         for key in self.edges:
-            if key in self.decisionNodes:
-                policy[key] = self.edges[key][0]
+            #if key in self.decisionNodes:
+            policy[key] = self.edges[key][0]
 
         while True:
             values = self.valueIteration(policy)
@@ -43,7 +43,7 @@ class MDPsolver(Parser):
 
 
     def isPolicySame(self, prevPolicy, newPolicy):
-        for node in newPolicy:
+        for node in prevPolicy:
             if prevPolicy[node] != newPolicy[node]:
                 return False
         return True
