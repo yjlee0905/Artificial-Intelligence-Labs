@@ -51,7 +51,6 @@ class Parser:
         self.setRewards()
         self.setAndValidateTerminals()
         self.parseAndValidateProbabilites()
-        print(lines)
 
     def setRewards(self):
         for key in self.nodes:
@@ -68,7 +67,7 @@ class Parser:
 
     def parseAndValidateProbabilites(self):
 
-        parsedChanceNode = {}
+        # convert to number in chance nodes
         for key in self.chanceNodes:
             probabilities = self.chanceNodes[key]
             for i in range(0, len(probabilities)):
@@ -86,6 +85,19 @@ class Parser:
                     # TODO exit?
             self.chanceNodes[key] = probabilities
 
+        # validate chance nodes
+        for node in self.chanceNodes:
+            if len(self.edges[node]) != len(self.chanceNodes[node]):
+                print 'Node ' + node + ' does not have the same number of edges and probabilities.'
+
+            sum = 0.0
+            for i in range(0, len(self.chanceNodes[node])):
+                sum += self.chanceNodes[node][i]
+            if sum != 1.0:
+                print 'The probability of node ' + node + ' does not add up to 1.'
+                exit()
+
+        # convert to number in decision nodes
         for key in self.decisionNodes:
             if self.decisionNodes[key].count('.') == 1:
                 decisionNode = self.decisionNodes[key]
@@ -98,6 +110,8 @@ class Parser:
                 self.decisionNodes[key] = float(self.decisionNodes[key])
             else:
                 print key + ' has wrong format of probability'
+                # TODO exit?
 
-        print(self.decisionNodes)
-        print(self.chanceNodes)
+        for node in self.edges:
+            if node not in self.decisionNodes and node not in self.chanceNodes:
+                self.decisionNodes[node] = 1.0
