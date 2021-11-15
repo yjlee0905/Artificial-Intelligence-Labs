@@ -1,5 +1,6 @@
 from Parser import Parser
 import sys
+import copy
 
 
 class MDPsolver(Parser):
@@ -21,19 +22,29 @@ class MDPsolver(Parser):
 
     def runMDP(self):
         # set initial policy TODO check initial policy
+        global values
         policy = {}
+        preValues = {}
         for key in self.edges:
-            #if key in self.decisionNodes:
-            policy[key] = self.edges[key][0]
+            if key in self.decisionNodes:
+                policy[key] = self.edges[key][0]
 
-        while True:
+        for key in self.rewards:
+            preValues[key] = self.rewards[key]
+
+        print(preValues)
+        print(policy)
+        for i in range(0, self.iter):
             values = self.valueIteration(policy)
             newPolicy = self.policyIteration(values)
             print values
             print newPolicy
-            if self.isPolicySame(policy, newPolicy):
+            if self.isPolicySame(preValues, values):
                 break
-            policy = newPolicy
+            # for p in policy:
+            #     policy[p] = newPolicy[p]
+            policy = copy.deepcopy(newPolicy)
+            preValues = copy.deepcopy(values)
 
         # print Result
         for node in policy:
@@ -43,8 +54,13 @@ class MDPsolver(Parser):
 
 
     def isPolicySame(self, prevPolicy, newPolicy):
+        # for node in prevPolicy:
+        #     if prevPolicy[node] != newPolicy[node]:
+        #         return False
+        # return True
+
         for node in prevPolicy:
-            if prevPolicy[node] != newPolicy[node]:
+            if abs(prevPolicy[node] - newPolicy[node]) > self.tol:
                 return False
         return True
 
@@ -102,32 +118,53 @@ class MDPsolver(Parser):
         newPolicy = {}
 
         if self.min:
-            for node in self.nodes:
-                if node not in self.edges:
-                    # TODO check what if no next node
-                    newPolicy[node] = node
-                else:
-                    nextNodes = self.edges[node]
-                    minValue = sys.float_info.max
-                    minNode = node
-                    for nextNode in nextNodes:
-                        if minValue > values[nextNode]:
-                            minValue = values[nextNode]
-                            minNode = nextNode
-                    newPolicy[node] = minNode
+            for node in self.decisionNodes:
+                if node in self.terminals:
+                    continue
+                nextNodes = self.edges[node]
+                minValue = sys.float_info.max
+                minNode = nextNodes[0]
+                for nextNode in nextNodes:
+                    if minValue > values[nextNode]:
+                        minValue = values[nextNode]
+                        minNode = nextNode
+                newPolicy[node] = minNode
+            #for node in values:
+                # if node not in self.edges:
+                #     # TODO check what if no next node
+                #     newPolicy[node] = node
+                # if node in self.decisionNodes:
+                #     nextNodes = self.edges[node]
+                #     minValue = sys.float_info.max
+                #     minNode = node
+                #     for nextNode in nextNodes:
+                #         if minValue > values[nextNode]:
+                #             minValue = values[nextNode]
+                #             minNode = nextNode
+                #     newPolicy[node] = minNode
 
         else:
-            for node in self.nodes:
-                if node not in self.edges:
-                    newPolicy[node] = node
-                else:
-                    nextNodes = self.edges[node]
-                    maxValue = sys.float_info.min
-                    maxNode = node
-                    for nextNode in nextNodes:
-                        if maxValue < values[nextNode]:
-                            maxValue = values[nextNode]
-                            maxNode = nextNode
-                    newPolicy[node] = maxNode
+            for node in self.decisionNodes:
+                if node in self.terminals:
+                    continue
+                nextNodes = self.edges[node]
+                maxValue = sys.float_info.min
+                maxNode = nextNodes[0]
+                for nextNode in nextNodes:
+                    if maxValue < values[nextNode]:
+                        maxValue = values[nextNode]
+                        maxNode = nextNode
+                newPolicy[node] = maxNode
+                # if node not in self.edges:
+                #     newPolicy[node] = node
+                # if node in self.decisionNodes:
+                #     nextNodes = self.edges[node]
+                #     maxValue = sys.float_info.min
+                #     maxNode = node
+                #     for nextNode in nextNodes:
+                #         if maxValue < values[nextNode]:
+                #             maxValue = values[nextNode]
+                #             maxNode = nextNode
+                #     newPolicy[node] = maxNode
 
         return newPolicy
