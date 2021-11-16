@@ -1,5 +1,4 @@
 from Parser import Parser
-import sys
 import copy
 
 
@@ -57,8 +56,7 @@ class MDPsolver(Parser):
         curRewards = {}
 
         idx = 0
-        maxDiff = sys.float_info.max
-        while idx < self.iter and maxDiff > self.tol: # TODO check tol
+        while idx < self.iter:
             for node in self.nodes:
                 value = self.rewards[node]
 
@@ -86,17 +84,21 @@ class MDPsolver(Parser):
 
                 curRewards[node] = value
 
-            diff = 0.0
-            for node in curRewards:
-                if abs(curRewards[node] - prevRewards[node]) > diff:
-                    diff = abs(curRewards[node] - prevRewards[node])
-            maxDiff = diff
+            if self.checkTolerance(curRewards, prevRewards):
+                break
             idx += 1
 
             for node in curRewards:
                 prevRewards[node] = curRewards[node]
 
         return prevRewards
+
+
+    def checkTolerance(self, curRewards, prevRewards):
+        for node in curRewards:
+            if abs(curRewards[node] - prevRewards[node]) > self.tol:
+                return False
+        return True
 
 
     def policyIteration(self, values):
