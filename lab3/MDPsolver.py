@@ -6,7 +6,6 @@ import copy
 class MDPsolver(Parser):
 
     def __init__(self, parser, df, tol, iter, min):
-        # Parser.__init__(self)
         self.chanceNodes = parser.chanceNodes
         self.decisionNodes = parser.decisionNodes
         self.rewards = parser.rewards
@@ -24,27 +23,17 @@ class MDPsolver(Parser):
         # set initial policy TODO check initial policy
         global values
         policy = {}
-        preValues = {}
         for key in self.edges:
             if key in self.decisionNodes:
                 policy[key] = self.edges[key][0]
 
-        for key in self.rewards:
-            preValues[key] = self.rewards[key]
-
-        print(preValues)
-        print(policy)
-        for i in range(0, self.iter):
+        while True:
             values = self.valueIteration(policy)
             newPolicy = self.policyIteration(values)
-            print values
-            print newPolicy
-            if self.isPolicySame(preValues, values):
+
+            if self.isPolicySame(policy, newPolicy):
                 break
-            # for p in policy:
-            #     policy[p] = newPolicy[p]
             policy = copy.deepcopy(newPolicy)
-            preValues = copy.deepcopy(values)
 
         # print Result
         for node in policy:
@@ -54,15 +43,11 @@ class MDPsolver(Parser):
 
 
     def isPolicySame(self, prevPolicy, newPolicy):
-        # for node in prevPolicy:
-        #     if prevPolicy[node] != newPolicy[node]:
-        #         return False
-        # return True
-
         for node in prevPolicy:
-            if abs(prevPolicy[node] - newPolicy[node]) > self.tol:
+            if prevPolicy[node] != newPolicy[node]:
                 return False
         return True
+
 
     def valueIteration(self, policy):
         # initialize rewards
@@ -122,49 +107,25 @@ class MDPsolver(Parser):
                 if node in self.terminals:
                     continue
                 nextNodes = self.edges[node]
-                minValue = sys.float_info.max
                 minNode = nextNodes[0]
+                minValue = values[minNode]
                 for nextNode in nextNodes:
                     if minValue > values[nextNode]:
                         minValue = values[nextNode]
                         minNode = nextNode
                 newPolicy[node] = minNode
-            #for node in values:
-                # if node not in self.edges:
-                #     # TODO check what if no next node
-                #     newPolicy[node] = node
-                # if node in self.decisionNodes:
-                #     nextNodes = self.edges[node]
-                #     minValue = sys.float_info.max
-                #     minNode = node
-                #     for nextNode in nextNodes:
-                #         if minValue > values[nextNode]:
-                #             minValue = values[nextNode]
-                #             minNode = nextNode
-                #     newPolicy[node] = minNode
 
         else:
             for node in self.decisionNodes:
                 if node in self.terminals:
                     continue
                 nextNodes = self.edges[node]
-                maxValue = sys.float_info.min
                 maxNode = nextNodes[0]
+                maxValue = values[maxNode]
                 for nextNode in nextNodes:
                     if maxValue < values[nextNode]:
                         maxValue = values[nextNode]
                         maxNode = nextNode
                 newPolicy[node] = maxNode
-                # if node not in self.edges:
-                #     newPolicy[node] = node
-                # if node in self.decisionNodes:
-                #     nextNodes = self.edges[node]
-                #     maxValue = sys.float_info.min
-                #     maxNode = node
-                #     for nextNode in nextNodes:
-                #         if maxValue < values[nextNode]:
-                #             maxValue = values[nextNode]
-                #             maxNode = nextNode
-                #     newPolicy[node] = maxNode
 
         return newPolicy
