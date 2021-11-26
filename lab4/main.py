@@ -3,7 +3,7 @@ from KMeansAlgorithm import KMeansAlgorithm
 if __name__ == "__main__":
     print("Let's start lab4")
 
-    fileName = "/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab4/inputs/km1.txt"
+    fileName = "/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab4/inputs/km2.txt"
     kmeans = KMeansAlgorithm()
     kmeans.parseFile(fileName)
-    kmeans.kmeans([[0,0], [200,200], [500,500]])
+    kmeans.kmeans([[0,0,0], [200,200,200], [500,500,500]])

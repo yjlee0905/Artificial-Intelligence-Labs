@@ -19,6 +19,7 @@ class KMeansAlgorithm:
 
         print len(self.points)
 
+
     def kmeans(self, initialPoints):
         prevDecisions = None
         curDecisions = self.decideCluster(initialPoints)
@@ -50,6 +51,7 @@ class KMeansAlgorithm:
 
         return decisions
 
+
     def updateCentroids(self, decisions, dimension):
 
         centroids = []
@@ -58,7 +60,7 @@ class KMeansAlgorithm:
             clusterDatas = decisions[cluster]
 
             if len(clusterDatas) == 0:
-                centroids.append([0, 0])
+                centroids.append([0] * dimension) # TODO check
                 continue
 
             sumDatas = [0] * dimension
@@ -72,31 +74,6 @@ class KMeansAlgorithm:
                 newCentroid.append(sumDatas[j] / len(decisions[cluster]))
             centroids.append(newCentroid)
         return centroids
-
-
-
-
-
-
-
-
-        # centroids = []
-        #
-        # sumPoints = [0] * dimension
-        # for cluster in decisions:
-        #
-        #     centroid = []
-        #     for i in range(0, len(decisions[cluster])):
-        #         for j in range(0, len(decisions[cluster])):
-        #             point = decisions[cluster][j]
-        #             for k in range(0, len(self.points[point])):
-        #                 sumPoints[k] += self.points[point][k]
-        #
-        #             for k in range(0, len(sumPoints)):
-        #                 centroid.append(sumPoints[i] / len(self.points))
-        #     centroids.append(centroid)
-
-
 
 
     def euclideanDistance(self, point1, point2):
