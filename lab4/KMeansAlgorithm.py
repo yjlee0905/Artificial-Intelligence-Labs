@@ -27,6 +27,7 @@ class KMeansAlgorithm:
             prevDecisions = curDecisions
             curDecisions = self.decideCluster(newCentroids)
         print curDecisions
+        print newCentroids
 
 
     def decideCluster(self, centroids):
@@ -50,22 +51,52 @@ class KMeansAlgorithm:
         return decisions
 
     def updateCentroids(self, decisions, dimension):
+
         centroids = []
-
         for cluster in decisions:
-            sumPoints = [0] * dimension
-            centroid = []
-            for i in range(0, len(decisions[cluster])):
-                for j in range(0, len(decisions[cluster])):
-                    point = decisions[cluster][j]
-                    for k in range(0, len(self.points[point])):
-                        sumPoints[k] += self.points[point][k]
+            print('cluster: ', cluster)
+            clusterDatas = decisions[cluster]
 
-                    for k in range(0, len(sumPoints)):
-                        centroid.append(sumPoints[i] / len(self.points))
-            centroids.append(centroid)
+            if len(clusterDatas) == 0:
+                centroids.append([0, 0])
+                continue
 
+            sumDatas = [0] * dimension
+            newCentroid = []
+            for data in clusterDatas:
+                point = self.points[data]
+                for i in range(0, len(point)):
+                    sumDatas[i] += point[i]
+
+            for j in range(0, len(sumDatas)):
+                newCentroid.append(sumDatas[j] / len(decisions[cluster]))
+            centroids.append(newCentroid)
         return centroids
+
+
+
+
+
+
+
+
+        # centroids = []
+        #
+        # sumPoints = [0] * dimension
+        # for cluster in decisions:
+        #
+        #     centroid = []
+        #     for i in range(0, len(decisions[cluster])):
+        #         for j in range(0, len(decisions[cluster])):
+        #             point = decisions[cluster][j]
+        #             for k in range(0, len(self.points[point])):
+        #                 sumPoints[k] += self.points[point][k]
+        #
+        #             for k in range(0, len(sumPoints)):
+        #                 centroid.append(sumPoints[i] / len(self.points))
+        #     centroids.append(centroid)
+
+
 
 
     def euclideanDistance(self, point1, point2):
