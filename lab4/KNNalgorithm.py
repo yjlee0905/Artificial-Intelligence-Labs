@@ -1,9 +1,11 @@
+from DistanceCalculator import DistanceCalculator
 
 class KNNalgorithm:
 
     def __init__(self):
         self.train = []
         self.test = []
+        self.calculator = DistanceCalculator()
         # {[p1, p2]: label}
 
 
@@ -35,7 +37,7 @@ class KNNalgorithm:
                 testCoordinate = curTest[:-1]
                 trainCoordinate = curTrain[:-1]
 
-                dist = self.euclideanDistance(testCoordinate, trainCoordinate)
+                dist = self.calculator.euclideanDistance(testCoordinate, trainCoordinate)
                 distances.append({dist:curTrain})
 
             # unit
@@ -64,13 +66,6 @@ class KNNalgorithm:
             newCluster = self.selectCluster(neighbors)
 
             print newCluster
-
-
-    def euclideanDistance(self, point1, point2):
-        dist = 0
-        for i in range(0, len(point1)):
-            dist += pow(point1[i] - point2[i], 2)
-        return dist
 
 
     def selectCluster(self, neighbors):
