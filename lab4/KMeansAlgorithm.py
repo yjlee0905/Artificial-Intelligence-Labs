@@ -6,7 +6,7 @@ class KMeansAlgorithm:
         self.points = {}
 
     def parseFile(self, fileName):
-        # TODO check file format
+        # TODO check file format, not csv
         lines = open(fileName, 'r').read().split('\n')
 
         for line in lines:
@@ -17,18 +17,25 @@ class KMeansAlgorithm:
             numPoints = [int(num) for num in strPoints]
             self.points[splitted[-1]] = numPoints
 
-        print len(self.points)
 
-
-    def kmeans(self, initialPoints):
+    def kmeans(self, initialCentroids):
         prevDecisions = None
-        curDecisions = self.decideCluster(initialPoints)
+        curDecisions = self.decideCluster(initialCentroids)
+        prevCentroids = initialCentroids
         while prevDecisions != curDecisions:
-            newCentroids = self.updateCentroids(curDecisions, len(initialPoints[0]))
+            # TODO check
+            newCentroids = self.updateCentroids(curDecisions, len(initialCentroids[0]), prevCentroids)
             prevDecisions = curDecisions
             curDecisions = self.decideCluster(newCentroids)
-        print curDecisions
-        print newCentroids
+            prevCentroids = newCentroids
+
+        # print result
+        for curDecision in curDecisions:
+            curDecisions[curDecision].sort()
+            print curDecisions[curDecision]
+
+        for centroid in newCentroids:
+            print centroid
 
 
     def decideCluster(self, centroids):
@@ -44,23 +51,20 @@ class KMeansAlgorithm:
                 if minVal > curDist:
                     minVal = curDist
                     cluster = i
-            # if len(decisions[cluster]) == 0:
-            #     decisions[cluster] = set(point)
-            # else:
             decisions[cluster].append(point)
 
         return decisions
 
 
-    def updateCentroids(self, decisions, dimension):
+    def updateCentroids(self, decisions, dimension, prevCentroids):
 
         centroids = []
         for cluster in decisions:
-            print('cluster: ', cluster)
             clusterDatas = decisions[cluster]
 
             if len(clusterDatas) == 0:
-                centroids.append([0] * dimension) # TODO check
+                centroids.append(prevCentroids[cluster])
+                #centroids.append([0] * dimension) # TODO check
                 continue
 
             sumDatas = [0] * dimension
@@ -71,7 +75,7 @@ class KMeansAlgorithm:
                     sumDatas[i] += point[i]
 
             for j in range(0, len(sumDatas)):
-                newCentroid.append(sumDatas[j] / len(decisions[cluster]))
+                newCentroid.append(float(sumDatas[j]) / len(decisions[cluster]))
             centroids.append(newCentroid)
         return centroids
 
