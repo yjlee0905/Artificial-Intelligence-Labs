@@ -9,7 +9,7 @@ want=B got=C
 want=B got=C
 want=B got=C
 want=B got=B
-want=A got=B
+want=A got=C
 want=B got=C
 want=B got=B
 want=B got=C
@@ -41,7 +41,7 @@ want=A got=C
 want=B got=B
 want=B got=C
 want=B got=B
-want=A got=B
+want=A got=C
 want=B got=B
 want=B got=A
 want=A got=C
@@ -49,11 +49,11 @@ want=B got=B
 want=A got=C
 want=B got=C
 want=B got=B
-want=A got=B
-want=B got=B
-want=A got=B
-want=B got=B
 want=A got=C
+want=B got=B
+want=A got=B
+want=B got=B
+want=A got=B
 want=B got=C
 want=A got=A
 want=A got=C
@@ -72,7 +72,7 @@ want=B got=A
 want=B got=C
 want=B got=C
 want=B got=C
-want=A got=B
+want=A got=C
 want=B got=B
 want=A got=C
 want=B got=B
@@ -104,5 +104,5 @@ want=B got=B
 want=B got=C
 want=B got=C
 Label=A Precision=9/16 Recall=9/30
-Label=B Precision=36/41 Recall=36/75
-Label=C Precision=0/48 Recall=0/0
+Label=B Precision=36/38 Recall=36/75
+Label=C Precision=0/51 Recall=0/0
