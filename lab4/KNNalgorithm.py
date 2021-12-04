@@ -37,7 +37,7 @@ class KNNalgorithm:
                 testCoordinate = curTest[:-1]
                 trainCoordinate = curTrain[:-1]
 
-                dist = self.calculator.euclideanDistance(testCoordinate, trainCoordinate)
+                dist = self.calculator.manhattanDistance(testCoordinate, trainCoordinate)
                 distances.append({dist:curTrain})
 
             # unit
@@ -45,27 +45,6 @@ class KNNalgorithm:
             neighbors = sortedDist[:k]
             newCluster = self.selectCluster(neighbors)
             print "want=" + self.test[test][-1] + " got=" + newCluster
-
-
-
-    def decideCluster(self, k):
-        distances = [] # {distance : point}
-        for cur in range(0, len(self.train)):
-            for comparision in range(0, len(self.train)):
-                if cur == comparision:
-                    continue
-                curPoint = self.train[cur]
-                comparisionPoint = self.train[comparision]
-                curCoordinate = curPoint[:-1]
-                compCoordinate = comparisionPoint[:-1]
-                dist = self.euclideanDistance(curCoordinate, compCoordinate)
-                distances.append({dist:comparisionPoint})
-
-            sortedDist = sorted(distances)
-            neighbors = sortedDist[:k]
-            newCluster = self.selectCluster(neighbors)
-
-            print newCluster
 
 
     def selectCluster(self, neighbors):
@@ -77,5 +56,7 @@ class KNNalgorithm:
             else:
                 vote[neighbor[-1]] = 1
 
-        selected = max(vote)
+        selected = max(vote, key=vote.get)
+
+        #max_key = max(a_dictionary, key=a_dictionary.get)
         return selected
