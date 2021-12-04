@@ -7,7 +7,7 @@ want=B got=B
 want=B got=C
 want=B got=C
 want=B got=C
-want=B got=C
+want=B got=A
 want=B got=B
 want=A got=B
 want=B got=C
@@ -18,12 +18,12 @@ want=A got=C
 want=A got=C
 want=B got=B
 want=B got=B
-want=A got=C
+want=A got=B
 want=B got=A
 want=B got=C
 want=B got=B
 want=B got=B
-want=B got=C
+want=B got=A
 want=A got=A
 want=A got=C
 want=B got=B
@@ -33,11 +33,11 @@ want=B got=B
 want=B got=B
 want=B got=B
 want=A got=C
-want=A got=C
+want=A got=B
 want=A got=C
 want=A got=A
 want=B got=C
-want=A got=C
+want=A got=A
 want=B got=B
 want=B got=C
 want=B got=B
@@ -49,35 +49,34 @@ want=B got=B
 want=A got=C
 want=B got=C
 want=B got=B
-want=A got=B
-want=B got=B
-want=A got=B
-want=B got=B
 want=A got=C
-want=B got=C
-want=A got=A
-want=A got=C
-want=B got=C
-want=A got=A
 want=B got=B
-want=B got=B
-want=B got=B
-want=B got=B
-want=B got=C
-want=B got=C
-want=B got=C
-want=B got=B
-want=A got=A
-want=B got=A
-want=B got=C
-want=A got=B
-want=B got=C
-want=B got=C
 want=A got=B
 want=B got=B
 want=A got=C
+want=B got=C
+want=A got=A
+want=A got=C
+want=B got=C
+want=A got=A
 want=B got=B
+want=B got=B
+want=B got=B
+want=B got=B
+want=B got=C
+want=B got=C
+want=B got=C
+want=B got=B
+want=A got=A
 want=B got=A
+want=B got=C
+want=B got=C
+want=B got=C
+want=A got=B
+want=B got=B
+want=A got=C
+want=B got=B
+want=B got=C
 want=B got=B
 want=A got=A
 want=B got=C
@@ -104,6 +103,6 @@ want=B got=C
 want=B got=B
 want=B got=C
 want=B got=C
-Label=A Precision=9/17 Recall=9/31
+Label=A Precision=10/19 Recall=10/30
 Label=B Precision=36/42 Recall=36/75
-Label=C Precision=0/47 Recall=0/0
+Label=C Precision=0/44 Recall=0/0
