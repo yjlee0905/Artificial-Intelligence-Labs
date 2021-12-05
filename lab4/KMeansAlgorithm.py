@@ -1,9 +1,11 @@
 import sys
+from DistanceCalculator import DistanceCalculator
 
 class KMeansAlgorithm:
 
     def __init__(self):
         self.points = {}
+        self.calculator = DistanceCalculator()
 
     def parseFile(self, fileName):
         # TODO check file format, not csv
@@ -47,7 +49,7 @@ class KMeansAlgorithm:
             cluster = -1
             minVal = sys.maxint
             for i in range(0, len(centroids)):
-                curDist = self.euclideanDistance(centroids[i], self.points[point])
+                curDist = self.calculator.euclideanDistance(centroids[i], self.points[point])
                 if minVal > curDist:
                     minVal = curDist
                     cluster = i
@@ -78,10 +80,3 @@ class KMeansAlgorithm:
                 newCentroid.append(float(sumDatas[j]) / len(decisions[cluster]))
             centroids.append(newCentroid)
         return centroids
-
-
-    def euclideanDistance(self, point1, point2):
-        dist = 0
-        for i in range(0, len(point1)):
-            dist += pow(point1[i] - point2[i], 2)
-        return dist

@@ -51,7 +51,7 @@ class KNNalgorithm:
             # unit
             sortedDist = sorted(distances)
             neighbors = sortedDist[:k]
-            newCluster = self.selectClusterByWeighted(neighbors)
+            newCluster = self.selectCluster(neighbors)
             print "want=" + self.test[test][-1] + " got=" + newCluster
 
             # Evaluation
