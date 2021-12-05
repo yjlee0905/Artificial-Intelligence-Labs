@@ -43,7 +43,7 @@ class KNNalgorithm:
             # unit
             sortedDist = sorted(distances)
             neighbors = sortedDist[:k]
-            newCluster = self.selectCluster(neighbors)
+            newCluster = self.selectClusterByWeighted(neighbors)
             print "want=" + self.test[test][-1] + " got=" + newCluster
 
 
@@ -60,3 +60,21 @@ class KNNalgorithm:
 
         #max_key = max(a_dictionary, key=a_dictionary.get)
         return selected
+
+
+    def selectClusterByWeighted(self, neighbors):
+        vote = {}
+        for i in range(0, len(neighbors)):
+            dist = neighbors[i].keys()[0]
+            if dist == 0:
+                dist = 1 / 0.0001
+            else:
+                dist = 1.0 / dist
+            neighbor = neighbors[i].values()[0]
+            if neighbor[-1] in vote:
+                vote[neighbor[-1]] += dist
+            else:
+                vote[neighbor[-1]] = dist
+        selected = max(vote, key=vote.get)
+        return selected
+
