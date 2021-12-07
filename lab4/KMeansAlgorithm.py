@@ -32,9 +32,12 @@ class KMeansAlgorithm:
             prevCentroids = newCentroids
 
         # print result
+        idx = 1
         for curDecision in curDecisions:
             curDecisions[curDecision].sort()
+            print 'C' + str(idx) + " = ",
             print curDecisions[curDecision]
+            idx += 1
 
         for centroid in newCentroids:
             print centroid
