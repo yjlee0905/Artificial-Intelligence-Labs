@@ -35,7 +35,7 @@ class KNNalgorithm:
         return data
 
 
-    def knn(self, k):
+    def knn(self, k, d, unitw):
         for test in range(0, len(self.test)):
             distances = []
             for train in range(0, len(self.train)):
@@ -45,13 +45,17 @@ class KNNalgorithm:
                 testCoordinate = curTest[:-1]
                 trainCoordinate = curTrain[:-1]
 
-                dist = self.calculator.manhattanDistance(testCoordinate, trainCoordinate)
-                distances.append({dist:curTrain})
+                if d == 'e2':
+                    dist = self.calculator.euclideanDistance(testCoordinate, trainCoordinate)
+                    distances.append({dist:curTrain})
+                elif d == 'manh':
+                    dist = self.calculator.manhattanDistance(testCoordinate, trainCoordinate)
+                    distances.append({dist:curTrain})
 
             # unit
             sortedDist = sorted(distances)
             neighbors = sortedDist[:k]
-            newCluster = self.selectCluster(neighbors)
+            newCluster = self.selectCluster(unitw, neighbors)
             print "want=" + self.test[test][-1] + " got=" + newCluster
 
             # Evaluation
@@ -85,7 +89,14 @@ class KNNalgorithm:
             print "Label=" + key + " Precision=" + str(self.numEquals[key]) + "/" + str(self.numGot[key]) + " Recall=" + str(self.numEquals[key]) + "/" + str(self.numWant[key])
 
 
-    def selectCluster(self, neighbors):
+    def selectCluster(self, unitw, neighbors):
+        if unitw == 'unit':
+            return self.selectClusterByUnit(neighbors)
+        elif unitw == '1/d':
+            return self.selectClusterByWeighted(neighbors)
+
+
+    def selectClusterByUnit(self, neighbors):
         vote = {}
         for i in range(0, len(neighbors)):
             neighbor = neighbors[i].values()[0]
