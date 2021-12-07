@@ -17,13 +17,14 @@ if __name__ == "__main__":
     points = c.split(' ')
     for point in points:
         centroid = point.split(',')
+        centroid = [int(p) for p in centroid]
         centroids.append(centroid)
 
     #fileName = "/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab4/inputs/km1.txt"
 
     kmeans = KMeansAlgorithm()
     kmeans.parseFile(dataFile)
-    kmeans.kmeans(centroids)
+    kmeans.kmeans(d, centroids)
 
 
 

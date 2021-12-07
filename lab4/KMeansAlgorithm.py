@@ -20,15 +20,15 @@ class KMeansAlgorithm:
             self.points[splitted[-1]] = numPoints
 
 
-    def kmeans(self, initialCentroids):
+    def kmeans(self, d, initialCentroids):
         prevDecisions = None
-        curDecisions = self.decideCluster(initialCentroids)
+        curDecisions = self.decideCluster(d, initialCentroids)
         prevCentroids = initialCentroids
         while prevDecisions != curDecisions:
             # TODO check
             newCentroids = self.updateCentroids(curDecisions, len(initialCentroids[0]), prevCentroids)
             prevDecisions = curDecisions
-            curDecisions = self.decideCluster(newCentroids)
+            curDecisions = self.decideCluster(d, newCentroids)
             prevCentroids = newCentroids
 
         # print result
@@ -40,7 +40,7 @@ class KMeansAlgorithm:
             print centroid
 
 
-    def decideCluster(self, centroids):
+    def decideCluster(self, d, centroids):
         decisions = {}
         for i in range(0, len(centroids)):
             decisions[i] = []
@@ -49,7 +49,7 @@ class KMeansAlgorithm:
             cluster = -1
             minVal = sys.maxint
             for i in range(0, len(centroids)):
-                curDist = self.calculator.euclideanDistance(centroids[i], self.points[point])
+                curDist = self.calculator.manhattanDistance(centroids[i], self.points[point]) if d == 'manh' else self.calculator.euclideanDistance(centroids[i], self.points[point])
                 if minVal > curDist:
                     minVal = curDist
                     cluster = i
