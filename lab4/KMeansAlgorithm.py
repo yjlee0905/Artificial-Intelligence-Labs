@@ -12,6 +12,8 @@ class KMeansAlgorithm:
         lines = open(fileName, 'r').read().split('\n')
 
         for line in lines:
+            if len(line) == 0:
+                continue
             splitted = line.split(',')
             # TODO check, A1, A2 always distinct?
             strPoints = splitted[:-1]

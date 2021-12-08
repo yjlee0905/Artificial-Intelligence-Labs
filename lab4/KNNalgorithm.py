@@ -25,6 +25,8 @@ class KNNalgorithm:
 
         data = []
         for line in lines:
+            if len(line) == 0:
+                continue
             splitted = line.split(',')
             label = splitted[-1]
             strPoints = splitted[:-1]
