@@ -17,37 +17,37 @@ def runCNFconverter(fileName, isVerbose, isSolverMode):
         converter = BNFtoCNFconverter()
         step1 = converter.eliminateIff(parseTree)
         if isVerbose:
-            print "step1: Eliminate <=> (If and Only If)"
+            print("step1: Eliminate <=> (If and Only If)")
             converter.printStepResult(step1)
 
         step2 = converter.eliminateImplication(step1)
         if isVerbose:
-            print "step2: Eliminate => (Implication)"
+            print("step2: Eliminate => (Implication)")
             step2Res = []
             converter.printStep2Result(step2, step2Res)
             for i in range(0, len(step2Res)):
-                print step2Res[i] + ' ',
+                print(step2Res[i] + ' ')
             print
 
         step3 = converter.applyDeMorganLaw(step2)
         if isVerbose:
-            print "step3: Apply DeMorgan's Law"
+            print("step3: Apply DeMorgan's Law")
             converter.printStepResult(step3)
 
         step4 = converter.applyDistributiveLaw(step3)
         if isVerbose:
-            print "step4: Apply Distributive Law"
+            print("step4: Apply Distributive Law")
             converter.printStepResult(step4)
 
         resultStep5 = converter.separateSentences(step4)
         if isVerbose:
-            print "step5: Separate Sentences"
+            print("step5: Separate Sentences")
             for res in resultStep5:
-                print res
+                print(res)
 
         elif not isSolverMode:
             for res in resultStep5:
-                print res
+                print(res)
 
         converted += resultStep5
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     isVerbose = args.v
 
     if fileName is None:
-        print "Please specify your input file."
+        print("Please specify your input file.")
         exit()
 
     if mode == 'dpll':
@@ -84,11 +84,11 @@ if __name__ == "__main__":
         result = dpllSolver.runDPLL(atoms, parsedSentences, isVerbose)
 
         if result[Constant.RESULT] == Constant.FAILURE:
-            print "NO VALID ASSIGNMENT"
+            print("NO VALID ASSIGNMENT")
         elif result[Constant.RESULT] == Constant.SUCCESS:
             for key in result:
                 if key is not Constant.RESULT:
-                    print key + " = " + result[key]
+                    print(key + " = " + result[key])
 
     elif mode == 'cnf':
         # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2/inputs/example1.txt'
@@ -103,15 +103,14 @@ if __name__ == "__main__":
             converted.append(cnfSentence.split())
 
         if isVerbose:
-            print
-            print "Run DPLL algorithm"
+            print("Run DPLL algorithm")
         dpllSolver = DPLLsolver()
         atoms = dpllSolver.parseAtoms(converted)
         result = dpllSolver.runDPLL(atoms, converted, isVerbose)
 
         if result[Constant.RESULT] == Constant.FAILURE:
-            print "NO VALID ASSIGNMENT"
+            print("NO VALID ASSIGNMENT")
         elif result[Constant.RESULT] == Constant.SUCCESS:
             for key in result:
                 if key is not Constant.RESULT:
-                    print key + " = " + result[key]
+                    print(key + " = " + result[key])

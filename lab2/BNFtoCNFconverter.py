@@ -128,7 +128,7 @@ class BNFtoCNFconverter:
         tree.inorderTraversal(tree, result)
 
         for i in range(0, len(result)):
-            print result[i] + ' ',
+            print(result[i] + ' ')
         print
 
     def printStep2Result(self, root, result):
