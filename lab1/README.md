@@ -1,13 +1,13 @@
 # Lab 1
 The purpose of this lab is to implement three search algorithms
-    - Breadth First Search
-    - Iterative Deepening Search
-    - A* Search
+* Breadth First Search 
+* Iterative Deepening Search
+* A* Search
 
 ## Dependencies
-    - C++11
+    C++11
 
-## How to run code
+## How to run
 ### Format
 ```
 make lab1
@@ -16,7 +16,7 @@ make lab1
 
 ### Options
 ```
--v : verbose
+-v : verbose mode
 -s{start node}: set start node
 -e{end node}: set goal node
 -a{algorithm}:
