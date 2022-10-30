@@ -26,8 +26,8 @@ def runCNFconverter(fileName, isVerbose, isSolverMode):
             step2Res = []
             converter.printStep2Result(step2, step2Res)
             for i in range(0, len(step2Res)):
-                print(step2Res[i] + ' ')
-            print
+                print(step2Res[i] + ' ', end='')
+            print()
 
         step3 = converter.applyDeMorganLaw(step2)
         if isVerbose:
