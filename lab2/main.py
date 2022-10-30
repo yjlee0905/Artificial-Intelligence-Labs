@@ -71,7 +71,7 @@ if __name__ == "__main__":
         exit()
 
     if mode == 'dpll':
-        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/dpexample4.txt'
+        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2/inputs/dpexample4.txt'
 
         parsedSentences = []
         sentences = open(fileName, 'r').read().split('\n')
@@ -91,11 +91,11 @@ if __name__ == "__main__":
                     print key + " = " + result[key]
 
     elif mode == 'cnf':
-        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example1.txt'
+        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2/inputs/example1.txt'
         runCNFconverter(fileName, isVerbose, False)
 
     elif mode == 'solver':
-        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2_python/inputs/example2.txt'
+        # fileName = '/Users/yjeonlee/Desktop/[Fall2021]AI/AI-Python/lab2/inputs/example2.txt'
         cnfFormed = runCNFconverter(fileName, isVerbose, True)
 
         converted = []

@@ -1,9 +1,0 @@
-P Q R
-P !Q !R
-P !W
-!Q !R !W
-!P !Q R
-U X
-U !X
-Q !U
-!R !U
